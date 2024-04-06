@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <body>
+        <pre id="x"></pre>
+    </body>
+    <script>
+        let element = document.getElementById('x');
+        element.style.fontSize = '1rem';
+
+        let isAndroid = /Android/i.test(navigator.userAgent);
+        let isWebView = false;
+        if (isAndroid) {
+            isWebView = /; wv/i.test(navigator.userAgent);
+        }
+
+        append('Is Android: ' + isAndroid);
+        append('Is WebView: ' + isWebView);
+        append('navigator.userAgent: ' + navigator.userAgent);
+        append('navigator.userAgentData: ' + JSON.stringify(navigator.userAgentData));
+
+        function append(text) {
+            element.textContent += text + '\n';
+        }
+    </script>
+</html>

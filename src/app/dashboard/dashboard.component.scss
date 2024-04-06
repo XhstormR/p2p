@@ -1,0 +1,102 @@
+@use '@angular/material' as mat;
+
+// https://github.com/angular/components/blob/main/src/material/core/theming/prebuilt/purple-green.scss
+$theme: mat.define-dark-theme(
+    (
+        color: (
+            primary: mat.define-palette(mat.$purple-palette, 700, 500, 800),
+            accent: mat.define-palette(mat.$green-palette, A200, A100, A400),
+        ),
+        typography: mat.define-typography-config(),
+        density: 0,
+    )
+);
+
+:host {
+    --mat-divider-color: lightblue;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 100vh;
+    margin: 0;
+    padding: 1rem;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    height: 700px;
+    max-width: 100%;
+    max-height: 100%;
+    background: rgba(white, 0.1);
+    backdrop-filter: blur(0.5rem);
+    border-radius: 1rem;
+    color: mat.get-theme-color($theme, primary, default-contrast);
+    transition: height 0.5s;
+}
+
+.scroller {
+    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.message-list {
+    padding: 1rem;
+}
+
+.message {
+    width: fit-content;
+    max-width: 80%;
+    margin-bottom: 1rem;
+
+    margin-left: 0;
+    margin-right: auto;
+    border-radius: 0 1rem 1rem 1rem;
+    background-color: #243b4c;
+}
+
+.message.me {
+    margin-left: auto;
+    margin-right: 0;
+    border-radius: 1rem 0 1rem 1rem;
+    background-color: #3d6a97;
+}
+
+.message .time {
+    margin-left: auto;
+    margin-right: 0.5rem;
+    color: rgba(white, 0.5);
+}
+
+.message pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message mat-progress-bar {
+    width: 95%;
+    margin: auto;
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.file-input {
+    display: none;
+}
+
+@media screen and (max-width: 599.98px) {
+    .content {
+        height: 100%;
+    }
+}

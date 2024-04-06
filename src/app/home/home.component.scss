@@ -1,0 +1,56 @@
+@use '@angular/material' as mat;
+
+// https://github.com/angular/components/blob/main/src/material/core/theming/prebuilt/purple-green.scss
+$theme: mat.define-dark-theme(
+    (
+        color: (
+            primary: mat.define-palette(mat.$purple-palette, 700, 500, 800),
+            accent: mat.define-palette(mat.$green-palette, A200, A100, A400),
+        ),
+        typography: mat.define-typography-config(),
+        density: 0,
+    )
+);
+
+:host {
+    --mat-divider-color: #{mat.get-theme-color($theme, primary, default)};
+}
+
+main {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 1rem;
+}
+
+.content {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    color: mat.get-theme-color($theme, primary, default-contrast);
+}
+
+.left-side,
+.right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+@media screen and (max-width: 599.98px) {
+    .content {
+        flex-direction: column;
+        width: max-content;
+    }
+
+    .mat-divider {
+        margin-block: 3rem;
+    }
+}

@@ -1,0 +1,39 @@
+bun create @angular@latest test
+bun ng add @angular/material
+bun ng version
+bun ng build
+bun start
+
+bun add peerjs
+bun add --dev prettier
+
+bun ng generate --help
+bun ng generate component home
+bun ng generate service housing
+bun ng generate @angular/material:address-form test-form
+
+bun upgrade
+bun install
+bun ng update --allow-dirty @angular/cli @angular/core @angular/material
+
+https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API
+https://webrtc.github.io/samples/
+https://fonts.google.com/icons?hl=zh-cn
+
+
+https://tw.battle.net/support/zh/help/product/services
+https://us.account.battle.net/login/zh/?ref=https://us.shop.battle.net/zh-tw&app=shop
+https://store.epicgames.com/zh-CN/p/dakar-desert-rally--snowrunner-cars-pack
+https://video2gif.cc/zh/
+
+https://raw.githubusercontent.com/angular/angular/main/.prettierrc
+https://raw.githubusercontent.com/salarcode/SmartProxy/master/.prettierrc
+https://googlechrome.github.io/samples/web-application-manifest/index.html
+
+
+
+github pages
+https://github.com/oven-sh/bun/blob/main/docs/guides/runtime/cicd.md
+https://github.com/actions/starter-workflows/blob/main/pages/static.yml
+https://github.com/actions/setup-node
+https://github.com/actions/deploy-pages

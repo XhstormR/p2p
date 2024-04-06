@@ -1,0 +1,92 @@
+<main>
+    <div class="content">
+        <div class="scroller">
+            <div class="message-list">
+                @for (message of messages(); track message.createdAt) {
+                    <mat-card class="message" [class]="isMe(message) ? 'me' : ''">
+                        <mat-card-header>
+                            <mat-card-subtitle>{{ message.from }}</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            @if (message.type === MessageType.File) {
+                                <pre>{{ message.text }} ({{ message.attachment?.size | fileSize }})</pre>
+                            } @else {
+                                <pre>{{ message.text }}</pre>
+                            }
+                            <mat-divider></mat-divider>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            @if (message.type === MessageType.File) {
+                                <button
+                                    (click)="onSave(message)"
+                                    app-throttle-button
+                                    mat-icon-button
+                                    color="accent"
+                                    matTooltip="Save"
+                                    type="button"
+                                >
+                                    <mat-icon svgIcon="download"></mat-icon>
+                                </button>
+                            } @else {
+                                <button
+                                    (click)="onCopy(message)"
+                                    app-throttle-button
+                                    mat-icon-button
+                                    color="accent"
+                                    matTooltip="Copy to clipboard"
+                                    type="button"
+                                >
+                                    <mat-icon svgIcon="content_copy"></mat-icon>
+                                </button>
+                            }
+                            <span class="time">
+                                {{ message.createdAt | date: 'HH:mm' }}
+                            </span>
+                        </mat-card-actions>
+                        <mat-card-footer>
+                            <!--                            @if (message.type === MessageType.File && message.isLoaded) {-->
+                            <!--                                <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>-->
+                            <!--                            }-->
+                        </mat-card-footer>
+                    </mat-card>
+                }
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="chat-box">
+            <input #fileUpload (change)="onFileChanged($event)" class="file-input" type="file" />
+            <mat-form-field appearance="outline">
+                <mat-label>Message</mat-label>
+                <textarea
+                    (keydown.control.enter)="onSend()"
+                    [(ngModel)]="inputText"
+                    cdkAutosizeMaxRows="5"
+                    cdkAutosizeMinRows="1"
+                    cdkTextareaAutosize
+                    matInput
+                ></textarea>
+                <button
+                    (click)="fileUpload.click()"
+                    [color]="selectedFile === undefined ? '' : 'primary'"
+                    [matTooltip]="selectedFile?.name || 'Select a file'"
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                >
+                    <mat-icon svgIcon="attach_file"></mat-icon>
+                </button>
+            </mat-form-field>
+            <button
+                (click)="onSend()"
+                [disabled]="selectedFile === undefined && inputText().length === 0"
+                color="primary"
+                mat-raised-button
+                type="button"
+            >
+                Send
+            </button>
+        </div>
+    </div>
+</main>
