@@ -32,3 +32,34 @@ export function indicate<T>(indicator: WritableSignal<boolean>) {
             finalize(() => indicator.set(false)),
         );
 }
+
+export function download(data: Blob | ArrayBuffer, fileType: string, fileName: string) {
+    let blob = new Blob([data], { type: fileType || 'application/octet-stream' });
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+
+    setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, 500);
+}
+
+export function blobToDataUrl(blob: Blob) {
+    return new Promise<string>((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+    });
+}
+
+export async function dataUrlToBlob(dataUrl: string) {
+    let response = await fetch(dataUrl);
+    return await response.blob();
+}

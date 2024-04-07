@@ -15,6 +15,7 @@ import { NotificationService } from '../service/notification.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
 import { WebRTCService } from '../service/webrtc.service';
+import { download } from '../utils';
 
 @Component({
     selector: 'app-dashboard',
@@ -68,8 +69,8 @@ export class DashboardComponent {
     }
 
     onSave(message: Message) {
-        if (message.attachment) {
-            this.download(message.attachment, message.text);
+        if (message.file) {
+            download(message.file, message.fileType, message.fileName);
             this.notificationService.open('Saved!');
         } else {
             throw new Error('Attachment is null');
@@ -98,22 +99,6 @@ export class DashboardComponent {
 
     isMe(message: Message) {
         return message.from === this.webRTCService.localId();
-    }
-
-    private download(blob: Blob, filename: string) {
-        let url = URL.createObjectURL(blob);
-
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-
-        setTimeout(() => {
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }, 500);
     }
 
     private sendText(text: string) {
