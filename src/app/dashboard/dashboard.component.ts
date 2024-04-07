@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { Component, ElementRef, model, ViewChild } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,6 +41,8 @@ export class DashboardComponent {
     messages = model<Message[]>([]);
     inputText = model('');
     selectedFile?: File;
+    @ViewChild('blop')
+    blop!: ElementRef<HTMLAudioElement>;
 
     constructor(
         private notificationService: NotificationService,
@@ -60,6 +62,7 @@ export class DashboardComponent {
                             break;
                         }
                     }
+                    this.blop.nativeElement.play();
                     this.messages.update(v => [...v, message]);
                 }
             },
