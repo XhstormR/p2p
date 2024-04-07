@@ -1,4 +1,4 @@
-import { Component, ElementRef, model, ViewChild } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,13 +41,13 @@ export class DashboardComponent {
     messages = model<Message[]>([]);
     inputText = model('');
     selectedFile?: File;
-    @ViewChild('blop')
-    blop!: ElementRef<HTMLAudioElement>;
+    blop = new Audio('/assets/sounds/blop.mp3');
 
     constructor(
         private notificationService: NotificationService,
         private webRTCService: WebRTCService,
     ) {
+        this.blop.load();
         webRTCService.getPeerEvent().subscribe({
             next: event => {
                 if (event.type === PeerEventType.Data) {
@@ -62,7 +62,7 @@ export class DashboardComponent {
                             break;
                         }
                     }
-                    this.blop.nativeElement.play();
+                    this.blop.play();
                     this.messages.update(v => [...v, message]);
                 }
             },

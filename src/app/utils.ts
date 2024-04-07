@@ -33,7 +33,7 @@ export function indicate<T>(indicator: WritableSignal<boolean>) {
         );
 }
 
-export function download(data: Blob | ArrayBuffer, fileType: string, fileName: string) {
+export function download(data: BlobPart, fileType: string, fileName: string) {
     let blob = new Blob([data], { type: fileType || 'application/octet-stream' });
     let url = URL.createObjectURL(blob);
 
