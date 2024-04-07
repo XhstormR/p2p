@@ -9,12 +9,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThrottleButtonDirective } from '../throttle-button.directive';
-import { blobToString, Message, stringToBlob } from '../message.model';
-import { MessageType, PeerEventType } from '../enums';
+import { FileMessage, Message, MessageMaker, MessageType, TextMessage } from '../message.model';
 import { NotificationService } from '../service/notification.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
 import { WebRTCService } from '../service/webrtc.service';
+import { PeerEventType } from '../peer-event.model';
 import { download } from '../utils';
 
 @Component({
@@ -50,25 +50,29 @@ export class DashboardComponent {
         webRTCService.getPeerEvent().subscribe({
             next: event => {
                 if (event.type === PeerEventType.Data) {
-                    let payload = event.payload as Message;
-                    if (payload.type === MessageType.File) {
-                        console.log(payload);
-                        if (payload.attachmentBase64)
-                            payload.attachment = stringToBlob(payload.attachmentBase64);
-                        console.log(payload);
+                    let message = event.payload as Message;
+                    console.log(message);
+                    switch (message.type) {
+                        case MessageType.File:
+                            message.fileName;
+                            break;
+                        case MessageType.Text: {
+                            message.text;
+                            break;
+                        }
                     }
-                    this.messages.update(v => [...v, payload]);
+                    this.messages.update(v => [...v, message]);
                 }
             },
         });
     }
 
-    async onCopy(message: Message) {
+    async onCopy(message: TextMessage) {
         await navigator.clipboard.writeText(message.text);
         this.notificationService.open('Copied!');
     }
 
-    onSave(message: Message) {
+    onSave(message: FileMessage) {
         if (message.file) {
             download(message.file, message.fileType, message.fileName);
             this.notificationService.open('Saved!');
@@ -98,31 +102,24 @@ export class DashboardComponent {
     }
 
     isMe(message: Message) {
-        return message.from === this.webRTCService.localId();
+        return message.sender === this.webRTCService.localId();
     }
 
     private sendText(text: string) {
-        let message: Message = {
-            from: this.webRTCService.localId(),
-            to: this.webRTCService.getRemotePeers().next().value,
-            text: text,
-            type: MessageType.Text,
-            createdAt: Date.now(),
-        };
+        let message = MessageMaker.textMessage(
+            this.webRTCService.localId(),
+            this.webRTCService.getRemotePeers().next().value,
+            text,
+        );
         this.sendMessage(message);
     }
 
     private async sendFile(file: File) {
-        let attachmentString = await blobToString(file);
-        let message: Message = {
-            from: this.webRTCService.localId(),
-            to: this.webRTCService.getRemotePeers().next().value,
-            text: file.name,
-            type: MessageType.File,
-            createdAt: Date.now(),
-            attachment: file,
-            attachmentBase64: attachmentString,
-        };
+        let message = MessageMaker.fileMessage(
+            this.webRTCService.localId(),
+            this.webRTCService.getRemotePeers().next().value,
+            file,
+        );
         this.sendMessage(message);
     }
 

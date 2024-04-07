@@ -2,9 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { EMPTY, Subject } from 'rxjs';
 import Peer, { DataConnection } from 'peerjs';
 import { getRandomInt } from '../utils';
-import { PeerEventType } from '../enums';
 import { Message } from '../message.model';
-import { PeerEvent } from '../peer-event.model';
+import { PeerEvent, PeerEventType } from '../peer-event.model';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Injectable({
@@ -106,7 +105,7 @@ export class WebRTCService {
 
         let subject = new Subject();
 
-        let conn = this.connections.get(message.to);
+        let conn = this.connections.get(message.receiver);
         if (!conn) {
             subject.error('message.to is lost');
         } else {

@@ -2,45 +2,51 @@
     <div class="content">
         <div class="scroller">
             <div class="message-list">
-                @for (message of messages(); track message.createdAt) {
+                @for (message of messages(); track message.timestamp) {
                     <mat-card class="message" [class]="isMe(message) ? 'me' : ''">
                         <mat-card-header>
-                            <mat-card-subtitle>{{ message.from }}</mat-card-subtitle>
+                            <mat-card-subtitle>{{ message.sender }}</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            @if (message.type === MessageType.File) {
-                                <pre>{{ message.text }} ({{ message.attachment?.size | fileSize }})</pre>
-                            } @else {
-                                <pre>{{ message.text }}</pre>
+                            @switch (message.type) {
+                                @case (MessageType.File) {
+                                    <pre>{{ message.fileName }} ({{ message.fileSize | fileSize }})</pre>
+                                }
+                                @case (MessageType.Text) {
+                                    <pre>{{ message.text }}</pre>
+                                }
                             }
                             <mat-divider></mat-divider>
                         </mat-card-content>
                         <mat-card-actions>
-                            @if (message.type === MessageType.File) {
-                                <button
-                                    (click)="onSave(message)"
-                                    app-throttle-button
-                                    mat-icon-button
-                                    color="accent"
-                                    matTooltip="Save"
-                                    type="button"
-                                >
-                                    <mat-icon svgIcon="download"></mat-icon>
-                                </button>
-                            } @else {
-                                <button
-                                    (click)="onCopy(message)"
-                                    app-throttle-button
-                                    mat-icon-button
-                                    color="accent"
-                                    matTooltip="Copy to clipboard"
-                                    type="button"
-                                >
-                                    <mat-icon svgIcon="content_copy"></mat-icon>
-                                </button>
+                            @switch (message.type) {
+                                @case (MessageType.File) {
+                                    <button
+                                        (click)="onSave(message)"
+                                        app-throttle-button
+                                        mat-icon-button
+                                        color="accent"
+                                        matTooltip="Save"
+                                        type="button"
+                                    >
+                                        <mat-icon svgIcon="download"></mat-icon>
+                                    </button>
+                                }
+                                @case (MessageType.Text) {
+                                    <button
+                                        (click)="onCopy(message)"
+                                        app-throttle-button
+                                        mat-icon-button
+                                        color="accent"
+                                        matTooltip="Copy to clipboard"
+                                        type="button"
+                                    >
+                                        <mat-icon svgIcon="content_copy"></mat-icon>
+                                    </button>
+                                }
                             }
                             <span class="time">
-                                {{ message.createdAt | date: 'HH:mm' }}
+                                {{ message.timestamp | date: 'HH:mm' }}
                             </span>
                         </mat-card-actions>
                         <mat-card-footer>

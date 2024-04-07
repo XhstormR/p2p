@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { indicate } from '../utils';
-import { PeerEventType } from '../enums';
+import { PeerEventType } from '../peer-event.model';
 
 @Component({
     selector: 'app-home',
@@ -83,7 +83,7 @@ export class HomeComponent {
 
     private remoteIdValidator() {
         return (control: AbstractControl) => {
-            const forbidden = control.value === this.localId();
+            let forbidden = control.value === this.localId();
             return forbidden ? { remoteId: { value: control.value } } : null;
         };
     }
