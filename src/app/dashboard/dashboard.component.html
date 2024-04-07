@@ -9,10 +9,10 @@
                         </mat-card-header>
                         <mat-card-content>
                             @switch (message.type) {
-                                @case (MessageType.File) {
+                                @case ('File') {
                                     <pre>{{ message.fileName }} ({{ message.fileSize | fileSize }})</pre>
                                 }
-                                @case (MessageType.Text) {
+                                @case ('Text') {
                                     <pre>{{ message.text }}</pre>
                                 }
                             }
@@ -20,7 +20,7 @@
                         </mat-card-content>
                         <mat-card-actions>
                             @switch (message.type) {
-                                @case (MessageType.File) {
+                                @case ('File') {
                                     <button
                                         (click)="onSave(message)"
                                         app-throttle-button
@@ -32,7 +32,7 @@
                                         <mat-icon svgIcon="download"></mat-icon>
                                     </button>
                                 }
-                                @case (MessageType.Text) {
+                                @case ('Text') {
                                     <button
                                         (click)="onCopy(message)"
                                         app-throttle-button

@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThrottleButtonDirective } from '../throttle-button.directive';
-import { FileMessage, Message, MessageMaker, MessageType, TextMessage } from '../message.model';
+import { FileMessage, Message, MessageMaker, TextMessage } from '../message.model';
 import { NotificationService } from '../service/notification.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
@@ -41,7 +41,6 @@ export class DashboardComponent {
     messages = model<Message[]>([]);
     inputText = model('');
     selectedFile?: File;
-    MessageType = MessageType;
 
     constructor(
         private notificationService: NotificationService,
@@ -53,10 +52,10 @@ export class DashboardComponent {
                     let message = event.payload as Message;
                     console.log(message);
                     switch (message.type) {
-                        case MessageType.File:
+                        case 'File':
                             message.fileName;
                             break;
-                        case MessageType.Text: {
+                        case 'Text': {
                             message.text;
                             break;
                         }

@@ -1,5 +1,5 @@
 interface BaseMessage {
-    readonly type: MessageType.Text | MessageType.File;
+    readonly type: MessageType;
 
     readonly sender: string;
     readonly receiver: string;
@@ -9,13 +9,13 @@ interface BaseMessage {
 }
 
 export interface TextMessage extends BaseMessage {
-    readonly type: MessageType.Text;
+    readonly type: 'Text';
 
     readonly text: string;
 }
 
 export interface FileMessage extends BaseMessage {
-    readonly type: MessageType.File;
+    readonly type: 'File';
 
     readonly file: File;
     readonly fileName: string;
@@ -24,7 +24,7 @@ export interface FileMessage extends BaseMessage {
 }
 
 class TextMessageImpl implements TextMessage {
-    readonly type = MessageType.Text;
+    readonly type = 'Text';
 
     constructor(
         public sender: string,
@@ -39,7 +39,7 @@ class TextMessageImpl implements TextMessage {
 }
 
 class FileMessageImpl implements FileMessage {
-    readonly type = MessageType.File;
+    readonly type = 'File';
 
     constructor(
         public sender: string,
@@ -56,11 +56,7 @@ class FileMessageImpl implements FileMessage {
     }
 }
 
-export enum MessageType {
-    Text,
-    File,
-}
-
+export type MessageType = 'Text' | 'File';
 export type Message = TextMessage | FileMessage;
 
 export class MessageMaker {
