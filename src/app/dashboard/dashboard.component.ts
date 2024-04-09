@@ -13,7 +13,7 @@ import { FileMessage, Message, MessageMaker, TextMessage } from '../message.mode
 import { NotificationService } from '../service/notification.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
-import { WebRTCService } from '../service/webrtc.service';
+import { PeerService } from '../service/peer.service';
 import { PeerEventType } from '../peer-event.model';
 import { download } from '../utils';
 
@@ -45,10 +45,10 @@ export class DashboardComponent {
 
     constructor(
         private notificationService: NotificationService,
-        private webRTCService: WebRTCService,
+        private peerService: PeerService,
     ) {
         this.blop.load();
-        webRTCService.getPeerEvent().subscribe({
+        peerService.getPeerEvent().subscribe({
             next: event => {
                 if (event.type === PeerEventType.Data) {
                     let message = event.payload as Message;
@@ -69,8 +69,8 @@ export class DashboardComponent {
         });
     }
 
-    async onCopy(message: TextMessage) {
-        await navigator.clipboard.writeText(message.text);
+    onCopy(message: TextMessage) {
+        navigator.clipboard.writeText(message.text);
         this.notificationService.open('Copied!');
     }
 
@@ -104,22 +104,22 @@ export class DashboardComponent {
     }
 
     isMe(message: Message) {
-        return message.sender === this.webRTCService.localId();
+        return message.sender === this.peerService.localId();
     }
 
     private sendText(text: string) {
         let message = MessageMaker.textMessage(
-            this.webRTCService.localId(),
-            this.webRTCService.getRemotePeers().next().value,
+            this.peerService.localId(),
+            this.peerService.getRemotePeers().next().value,
             text,
         );
         this.sendMessage(message);
     }
 
-    private async sendFile(file: File) {
+    private sendFile(file: File) {
         let message = MessageMaker.fileMessage(
-            this.webRTCService.localId(),
-            this.webRTCService.getRemotePeers().next().value,
+            this.peerService.localId(),
+            this.peerService.getRemotePeers().next().value,
             file,
         );
         this.sendMessage(message);
@@ -127,8 +127,8 @@ export class DashboardComponent {
 
     private sendMessage(message: Message) {
         this.messages.update(v => [...v, message]);
-        this.webRTCService.sendMessage(message).subscribe({
             complete: () => {},
+        this.peerService.sendMessage(message).subscribe({
             error: err => {
                 throw err;
             },

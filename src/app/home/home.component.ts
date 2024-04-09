@@ -1,5 +1,5 @@
 import { Component, model, NgZone } from '@angular/core';
-import { WebRTCService } from '../service/webrtc.service';
+import { PeerService } from '../service/peer.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
@@ -29,8 +29,8 @@ import { PeerEventType } from '../peer-event.model';
     styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-    readonly localId = this.webRTCService.localId;
-    readonly isOnline = this.webRTCService.isOnline;
+    readonly localId = this.peerService.localId;
+    readonly isOnline = this.peerService.isOnline;
     readonly isReloading = model(false);
     readonly isConnecting = model(false);
     readonly isXSmall = this.breakpointObserver
@@ -44,12 +44,12 @@ export class HomeComponent {
     constructor(
         private router: Router,
         private ngZone: NgZone,
-        private webRTCService: WebRTCService,
+        private peerService: PeerService,
         private breakpointObserver: BreakpointObserver,
     ) {
         this.onRenew();
 
-        webRTCService.getPeerEvent().subscribe({
+        peerService.getPeerEvent().subscribe({
             next: event => {
                 if (event.type === PeerEventType.Connection) {
                     this.goToDashboard();
@@ -59,14 +59,14 @@ export class HomeComponent {
     }
 
     onRenew() {
-        this.webRTCService.renewPeer().pipe(indicate(this.isReloading)).subscribe();
+        this.peerService.renew().pipe(indicate(this.isReloading)).subscribe();
     }
 
     onSubmit() {
         let remoteId = this.remoteIdForm.value.remoteId;
         if (!remoteId) return;
 
-        this.webRTCService
+        this.peerService
             .connect(remoteId)
             .pipe(indicate(this.isConnecting))
             .subscribe({

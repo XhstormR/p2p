@@ -9,7 +9,7 @@ import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 @Injectable({
     providedIn: 'root',
 })
-export class WebRTCService {
+export class PeerService {
     private peer = new Peer(this.getRandomID());
     private peerEvent$ = new Subject<PeerEvent>();
     private connections = new Map<string, DataConnection>();
@@ -18,7 +18,7 @@ export class WebRTCService {
     private isOnlineSignal = signal(false);
     readonly isOnline = this.isOnlineSignal.asReadonly();
 
-    renewPeer() {
+    renew() {
         return new Observable(subscriber => {
             try {
                 this.peer.destroy();
@@ -49,7 +49,37 @@ export class WebRTCService {
         });
     }
 
-    listenPeer() {
+    sendMessage(message: Message) {
+        return new Observable(subscriber => {
+            try {
+                if (!this.isOnline()) subscriber.error('sender is lost');
+
+                let conn = this.connections.get(message.receiver);
+                if (conn) {
+                    let result = conn.send(message);
+                    if (result instanceof Promise) {
+                        fromPromise(result).subscribe(subscriber);
+                    } else {
+                        subscriber.complete();
+                    }
+                } else {
+                    subscriber.error('receiver is lost');
+                }
+            } catch (err) {
+                subscriber.error(err);
+            }
+        });
+    }
+
+    getPeerEvent() {
+        return this.peerEvent$.asObservable();
+    }
+
+    getRemotePeers() {
+        return this.connections.keys();
+    }
+
+    private listenPeer() {
         this.isOnlineSignal.set(false);
         this.peer.on('open', id => {
             console.log('peer open', id);
@@ -84,7 +114,7 @@ export class WebRTCService {
         });
     }
 
-    listenConn(conn: DataConnection) {
+    private listenConn(conn: DataConnection) {
         conn.on('open', () => {
             console.log('connection open');
             this.connections.set(conn.peer, conn);
@@ -108,37 +138,7 @@ export class WebRTCService {
         });
     }
 
-    sendMessage(message: Message) {
-        return new Observable(subscriber => {
-            try {
-                if (!this.isOnline()) subscriber.error('sender is lost');
-
-                let conn = this.connections.get(message.receiver);
-                if (!conn) {
-                    subscriber.error('receiver is lost');
-                } else {
-                    let result = conn.send(message);
-                    if (result instanceof Promise) {
-                        fromPromise(result).subscribe(subscriber);
-                    } else {
-                        subscriber.complete();
-                    }
-                }
-            } catch (err) {
-                subscriber.error(err);
-            }
-        });
-    }
-
-    getPeerEvent() {
-        return this.peerEvent$.asObservable();
-    }
-
-    getRemotePeers() {
-        return this.connections.keys();
-    }
-
-    getRandomID() {
+    private getRandomID() {
         return `${getRandomInt(1000, 10000)}-${getRandomInt(1000, 10000)}`;
     }
 }
