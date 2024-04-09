@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { EMPTY, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import Peer, { DataConnection } from 'peerjs';
 import { getRandomInt } from '../utils';
 import { Message } from '../message.model';
@@ -19,26 +19,34 @@ export class WebRTCService {
     readonly isOnline = this.isOnlineSignal.asReadonly();
 
     renewPeer() {
-        this.peer.destroy();
-        this.peer = new Peer(this.getRandomID());
-        this.listenPeer();
+        return new Observable(subscriber => {
+            try {
+                this.peer.destroy();
+                this.peer = new Peer(this.getRandomID());
+                this.listenPeer();
 
-        let subject = new Subject();
-        this.peer.on('open', () => subject.complete());
-        this.peer.on('error', err => subject.error(err));
-        return subject.asObservable();
+                this.peer.on('open', () => subscriber.complete());
+                this.peer.on('error', err => subscriber.error(err));
+            } catch (err) {
+                subscriber.error(err);
+            }
+        });
     }
 
     connect(remoteId: string) {
-        if (!this.isOnline()) return EMPTY;
+        return new Observable(subscriber => {
+            try {
+                if (!this.isOnline()) subscriber.error('sender is lost');
 
-        let conn = this.peer.connect(remoteId);
-        this.listenConn(conn);
+                let conn = this.peer.connect(remoteId);
+                this.listenConn(conn);
 
-        let subject = new Subject();
-        conn.on('open', () => subject.complete());
-        this.peer.on('error', err => subject.error(err));
-        return subject.asObservable();
+                conn.on('open', () => subscriber.complete());
+                this.peer.on('error', err => subscriber.error(err));
+            } catch (err) {
+                subscriber.error(err);
+            }
+        });
     }
 
     listenPeer() {
@@ -101,23 +109,25 @@ export class WebRTCService {
     }
 
     sendMessage(message: Message) {
-        if (!this.isOnline()) return EMPTY;
+        return new Observable(subscriber => {
+            try {
+                if (!this.isOnline()) subscriber.error('sender is lost');
 
-        let subject = new Subject();
-
-        let conn = this.connections.get(message.receiver);
-        if (!conn) {
-            subject.error('message.to is lost');
-        } else {
-            let result = conn.send(message);
-            if (result instanceof Promise) {
-                return fromPromise(result);
-            } else {
-                subject.complete();
+                let conn = this.connections.get(message.receiver);
+                if (!conn) {
+                    subscriber.error('receiver is lost');
+                } else {
+                    let result = conn.send(message);
+                    if (result instanceof Promise) {
+                        fromPromise(result).subscribe(subscriber);
+                    } else {
+                        subscriber.complete();
+                    }
+                }
+            } catch (err) {
+                subscriber.error(err);
             }
-        }
-
-        return subject.asObservable();
+        });
     }
 
     getPeerEvent() {
