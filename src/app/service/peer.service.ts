@@ -12,7 +12,7 @@ import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 export class PeerService {
     private peer = new Peer(this.getRandomID());
     private peerEvent$ = new Subject<PeerEvent>();
-    private connections = new Map<string, DataConnection>();
+    private connectionMap = new Map<string, DataConnection>();
     private localIdSignal = signal('');
     readonly localId = this.localIdSignal.asReadonly();
     private isOnlineSignal = signal(false);
@@ -54,7 +54,7 @@ export class PeerService {
             try {
                 if (!this.isOnline()) subscriber.error('sender is lost');
 
-                let conn = this.connections.get(message.receiver);
+                let conn = this.connectionMap.get(message.receiver);
                 if (conn) {
                     let result = conn.send(message);
                     if (result instanceof Promise) {
@@ -76,7 +76,7 @@ export class PeerService {
     }
 
     getRemotePeers() {
-        return this.connections.keys();
+        return this.connectionMap.keys();
     }
 
     private listenPeer() {
@@ -117,7 +117,7 @@ export class PeerService {
     private listenConn(conn: DataConnection) {
         conn.on('open', () => {
             console.log('connection open');
-            this.connections.set(conn.peer, conn);
+            this.connectionMap.set(conn.peer, conn);
         });
 
         conn.on('data', data => {
@@ -130,7 +130,7 @@ export class PeerService {
 
         conn.on('close', () => {
             console.warn('connection close');
-            this.connections.delete(conn.peer);
+            this.connectionMap.delete(conn.peer);
         });
 
         conn.on('error', err => {

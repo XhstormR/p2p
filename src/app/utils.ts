@@ -63,3 +63,7 @@ export async function dataUrlToBlob(dataUrl: string) {
     let response = await fetch(dataUrl);
     return await response.blob();
 }
+
+export function error(err: any): never {
+    throw new Error(err);
+}

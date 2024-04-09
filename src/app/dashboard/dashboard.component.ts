@@ -15,7 +15,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
 import { PeerService } from '../service/peer.service';
 import { PeerEventType } from '../peer-event.model';
-import { download } from '../utils';
+import { download, error } from '../utils';
 
 @Component({
     selector: 'app-dashboard',
@@ -38,10 +38,10 @@ import { download } from '../utils';
     styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-    messages = model<Message[]>([]);
-    inputText = model('');
+    readonly messages = model<Message[]>([]);
+    readonly inputText = model('');
+    readonly blop = new Audio('/assets/sounds/blop.mp3');
     selectedFile?: File;
-    blop = new Audio('/assets/sounds/blop.mp3');
 
     constructor(
         private notificationService: NotificationService,
@@ -75,12 +75,9 @@ export class DashboardComponent {
     }
 
     onSave(message: FileMessage) {
-        if (message.file) {
-            download(message.file, message.fileType, message.fileName);
-            this.notificationService.open('Saved!');
-        } else {
-            throw new Error('Attachment is null');
-        }
+        message.file || error('Attachment is null');
+        download(message.file, message.fileType, message.fileName);
+        this.notificationService.open('Saved!');
     }
 
     onSend() {

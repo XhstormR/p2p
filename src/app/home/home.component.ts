@@ -10,7 +10,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { indicate } from '../utils';
+import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 
 @Component({
@@ -71,9 +71,7 @@ export class HomeComponent {
             .pipe(indicate(this.isConnecting))
             .subscribe({
                 complete: () => this.goToDashboard(),
-                error: err => {
-                    throw err;
-                },
+                error: err => error(err),
             });
     }
 
