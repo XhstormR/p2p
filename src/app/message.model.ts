@@ -23,48 +23,40 @@ export interface FileMessage extends BaseMessage {
     readonly fileSize: number;
 }
 
-class TextMessageImpl implements TextMessage {
-    readonly type = 'Text';
-
-    constructor(
-        public sender: string,
-        public receiver: string,
-        public text: string,
-        public timestamp: number = Date.now(),
-    ) {}
-
-    toString(): string {
-        return `[${this.timestamp}] ${this.sender} -> ${this.receiver}: ${this.text}`;
-    }
-}
-
-class FileMessageImpl implements FileMessage {
-    readonly type = 'File';
-
-    constructor(
-        public sender: string,
-        public receiver: string,
-        public file: File,
-        public fileName: string,
-        public fileType: string,
-        public fileSize: number,
-        public timestamp: number = Date.now(),
-    ) {}
-
-    toString(): string {
-        return `[${this.timestamp}] ${this.sender} -> ${this.receiver}: ${this.fileName} (size: ${this.fileSize} bytes)`;
-    }
-}
-
 export type MessageType = 'Text' | 'File';
 export type Message = TextMessage | FileMessage;
 
 export class MessageMaker {
-    static textMessage(sender: string, receiver: string, text: string): TextMessage {
-        return new TextMessageImpl(sender, receiver, text);
+    static textMessage(
+        sender: string,
+        receiver: string,
+        text: string,
+        timestamp: number = Date.now(),
+    ): TextMessage {
+        return {
+            type: 'Text',
+            sender: sender,
+            receiver: receiver,
+            text: text,
+            timestamp: timestamp,
+        };
     }
 
-    static fileMessage(sender: string, receiver: string, file: File): FileMessage {
-        return new FileMessageImpl(sender, receiver, file, file.name, file.type, file.size);
+    static fileMessage(
+        sender: string,
+        receiver: string,
+        file: File,
+        timestamp: number = Date.now(),
+    ): FileMessage {
+        return {
+            type: 'File',
+            sender: sender,
+            receiver: receiver,
+            file: file,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+            timestamp: timestamp,
+        };
     }
 }
