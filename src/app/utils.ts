@@ -1,17 +1,6 @@
-import { Signal, WritableSignal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { WritableSignal } from '@angular/core';
 import { defer, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-
-declare module 'rxjs' {
-    interface Observable<T> {
-        toSignal(): Signal<T>;
-    }
-}
-
-Observable.prototype.toSignal = function (this) {
-    return toSignal(this);
-};
 
 export function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -66,4 +55,8 @@ export async function dataUrlToBlob(dataUrl: string) {
 
 export function error(err: any): never {
     throw new Error(err);
+}
+
+export function copyOf<T>(old: T, partial: Partial<T>): T {
+    return { ...old, ...partial };
 }

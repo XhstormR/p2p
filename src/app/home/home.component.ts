@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
+import '../prototype.utils';
 
 @Component({
     selector: 'app-home',
@@ -36,7 +37,7 @@ export class HomeComponent {
     readonly isXSmall = this.breakpointObserver
         .observe(Breakpoints.XSmall)
         .pipe(map(result => result.matches))
-        .toSignal();
+        ._toSignal();
     readonly remoteIdForm = new FormGroup({
         remoteId: new FormControl('', this.remoteIdValidator()),
     });
