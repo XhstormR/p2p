@@ -11,30 +11,19 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrl: './app.component.scss',
 })
 export class AppComponent {
+    private icons = [
+        { iconName: 'link', url: '/assets/svg/link.svg' },
+        { iconName: 'autorenew', url: '/assets/svg/autorenew.svg' },
+        { iconName: 'backspace', url: '/assets/svg/backspace.svg' },
+        { iconName: 'content_copy', url: '/assets/svg/content_copy.svg' },
+        { iconName: 'download', url: '/assets/svg/download.svg' },
+        { iconName: 'attach_file', url: '/assets/svg/attach_file.svg' },
+        { iconName: 'error', url: '/assets/svg/error.svg' },
+    ];
+
     constructor(sanitizer: DomSanitizer, iconRegistry: MatIconRegistry) {
-        iconRegistry.addSvgIcon(
-            'link',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/link.svg'),
-        );
-        iconRegistry.addSvgIcon(
-            'autorenew',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/autorenew.svg'),
-        );
-        iconRegistry.addSvgIcon(
-            'backspace',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/backspace.svg'),
-        );
-        iconRegistry.addSvgIcon(
-            'content_copy',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/content_copy.svg'),
-        );
-        iconRegistry.addSvgIcon(
-            'download',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/download.svg'),
-        );
-        iconRegistry.addSvgIcon(
-            'attach_file',
-            sanitizer.bypassSecurityTrustResourceUrl('/assets/svg/attach_file.svg'),
+        this.icons.forEach(icon =>
+            iconRegistry.addSvgIcon(icon.iconName, sanitizer.bypassSecurityTrustResourceUrl(icon.url)),
         );
     }
 }

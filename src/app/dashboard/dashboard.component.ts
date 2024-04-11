@@ -63,6 +63,7 @@ export class DashboardComponent {
                         }
                     }
                     this.blop.play();
+                    message = message._copy({ status: 'Success' });
                     this.messages.update(v => [...v, message]);
                 }
             },
@@ -124,11 +125,16 @@ export class DashboardComponent {
 
     private sendMessage(message: Message) {
         this.messages.update(v => [...v, message]);
-            complete: () => {},
         this.peerService.sendMessage(message).subscribe({
+            complete: () => this.updateMessage(message._copy({ status: 'Success' })),
             error: err => {
-                throw err;
+                this.updateMessage(message._copy({ status: 'Failure' }));
+                error(err);
             },
         });
+    }
+
+    private updateMessage(message: Message) {
+        this.messages.update(v => v.map(old => (old.timestamp === message.timestamp ? message : old)));
     }
 }
