@@ -3,7 +3,7 @@
         <section class="left-side">
             <mat-form-field appearance="outline">
                 <mat-label>Local ID</mat-label>
-                <input [value]="localId()" matInput readonly type="text" />
+                <input [value]="peerService.localId()" matInput readonly type="text" />
             </mat-form-field>
 
             <button (click)="onRenew()" [disabled]="isReloading()" color="primary" mat-fab matTooltip="Renew">
@@ -49,7 +49,7 @@
             </mat-form-field>
 
             <button
-                [disabled]="isConnecting() || !isOnline() || !remoteIdForm.valid"
+                [disabled]="isConnecting() || !peerService.isOnline() || !remoteIdForm.valid"
                 color="primary"
                 mat-fab
                 matTooltip="Connect"

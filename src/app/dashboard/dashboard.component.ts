@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,7 @@ import { download, error } from '../utils';
 @Component({
     selector: 'app-dashboard',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
         MatIconModule,
@@ -45,7 +46,7 @@ export class DashboardComponent {
 
     constructor(
         private notificationService: NotificationService,
-        private peerService: PeerService,
+        public peerService: PeerService,
     ) {
         this.blop.load();
         peerService.getPeerEvent().subscribe({

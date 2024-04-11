@@ -1,4 +1,4 @@
-import { Component, model, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model, NgZone } from '@angular/core';
 import { PeerService } from '../service/peer.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -17,6 +17,7 @@ import '../prototype.utils';
 @Component({
     selector: 'app-home',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIconModule,
         MatInputModule,
@@ -30,8 +31,6 @@ import '../prototype.utils';
     styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-    readonly localId = this.peerService.localId;
-    readonly isOnline = this.peerService.isOnline;
     readonly isReloading = model(false);
     readonly isConnecting = model(false);
     readonly isXSmall = this.breakpointObserver
@@ -45,8 +44,8 @@ export class HomeComponent {
     constructor(
         private router: Router,
         private ngZone: NgZone,
-        private peerService: PeerService,
         private breakpointObserver: BreakpointObserver,
+        public peerService: PeerService,
     ) {
         this.onRenew();
 
@@ -82,7 +81,7 @@ export class HomeComponent {
 
     private remoteIdValidator() {
         return (control: AbstractControl) => {
-            let forbidden = control.value === this.localId();
+            let forbidden = control.value === this.peerService.localId;
             return forbidden ? { remoteId: { value: control.value } } : null;
         };
     }
