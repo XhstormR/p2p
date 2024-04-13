@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 import '../prototype.utils';
+import { LocalStorageService } from '../service/local-storage.service';
 
 @Component({
     selector: 'app-home',
@@ -38,39 +39,36 @@ export class HomeComponent {
         .pipe(map(result => result.matches))
         ._toSignal();
     readonly remoteIdForm = new FormGroup({
-        remoteId: new FormControl('', this.remoteIdValidator()),
+        remoteId: new FormControl(this.localStorageService.getItem('remote-id'), this.remoteIdValidator()),
     });
 
     constructor(
         private router: Router,
         private ngZone: NgZone,
         private breakpointObserver: BreakpointObserver,
+        private localStorageService: LocalStorageService,
         public peerService: PeerService,
     ) {
-        this.onRenew();
-
-        peerService.getPeerEvent().subscribe({
-            next: event => {
-                if (event.type === PeerEventType.Connection) {
-                    this.goToDashboard();
-                }
-            },
+        peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
+        peerService.peerEvent$.subscribe(event => {
+            if (event.type === PeerEventType.onConnectionConnected) {
+                this.goToDashboard();
+            }
         });
     }
 
     onRenew() {
-        this.peerService.renew().pipe(indicate(this.isReloading)).subscribe();
+        this.peerService.renewPeerSession().pipe(indicate(this.isReloading)).subscribe();
     }
 
     onSubmit() {
-        let remoteId = this.remoteIdForm.value.remoteId;
-        if (!remoteId) return;
+        let remoteId = this.remoteIdForm.value.remoteId || error('remoteId null');
 
         this.peerService
-            .connect(remoteId)
+            .connectRemotePeer(remoteId)
             .pipe(indicate(this.isConnecting))
             .subscribe({
-                complete: () => this.goToDashboard(),
+                complete: () => this.localStorageService.setItem('remote-id', remoteId),
                 error: err => error(err),
             });
     }
@@ -81,8 +79,8 @@ export class HomeComponent {
 
     private remoteIdValidator() {
         return (control: AbstractControl) => {
-            let forbidden = control.value === this.peerService.localId;
-            return forbidden ? { remoteId: { value: control.value } } : null;
+            let isForbidden = control.value === this.peerService.localId();
+            return isForbidden ? { remoteId: { value: control.value } } : null;
         };
     }
 }

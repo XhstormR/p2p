@@ -3,7 +3,7 @@
         <div class="scroller">
             <div class="message-list">
                 @for (message of messages(); track message.timestamp) {
-                    <div class="message" [class]="isMe(message) ? 'me' : ''">
+                    <div class="message" [class.me]="message.sender === peerService.localId()">
                         @if (message.status === 'Failure') {
                             <div>
                                 <mat-icon
@@ -77,12 +77,14 @@
             <mat-form-field appearance="outline">
                 <mat-label>Message</mat-label>
                 <textarea
-                    (keydown.control.enter)="onSend()"
+                    (keydown.enter)="onSend($event)"
                     [(ngModel)]="inputText"
-                    cdkAutosizeMaxRows="5"
+                    autofocus
+                    cdkAutosizeMaxRows="8"
                     cdkAutosizeMinRows="1"
                     cdkTextareaAutosize
                     matInput
+                    placeholder="Enter: Send; Shift+Enter: Newline"
                 ></textarea>
                 <button
                     (click)="fileUpload.click()"
@@ -96,8 +98,8 @@
                 </button>
             </mat-form-field>
             <button
-                (click)="onSend()"
-                [disabled]="selectedFile === undefined && inputText().length === 0"
+                (click)="onSend($event)"
+                [disabled]="selectedFile === undefined && inputText().trim().length === 0"
                 color="primary"
                 mat-raised-button
                 type="button"

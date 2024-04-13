@@ -1,9 +1,14 @@
 <main>
     <div class="content">
         <section class="left-side">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">
                 <mat-label>Local ID</mat-label>
                 <input [value]="peerService.localId()" matInput readonly type="text" />
+                @if (peerService.isOnline()) {
+                    <mat-icon matSuffix svgIcon="done" color="accent" matTooltip="Online"></mat-icon>
+                } @else {
+                    <mat-icon matSuffix svgIcon="error" color="warn" matTooltip="Offline"></mat-icon>
+                }
             </mat-form-field>
 
             <button (click)="onRenew()" [disabled]="isReloading()" color="primary" mat-fab matTooltip="Renew">
@@ -24,8 +29,8 @@
                     #remoteId
                     formControlName="remoteId"
                     matInput
-                    maxlength="9"
-                    minlength="9"
+                    maxlength="7"
+                    minlength="7"
                     required
                     type="text"
                 />
@@ -45,7 +50,7 @@
                 } @else if (remoteIdForm.controls.remoteId.hasError('required')) {
                     <mat-error>Remote ID is <strong>required</strong></mat-error>
                 }
-                <mat-hint align="end">{{ remoteId.value.length }} / 9</mat-hint>
+                <mat-hint align="end">{{ remoteId.value.length }} / 7</mat-hint>
             </mat-form-field>
 
             <button

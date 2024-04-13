@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, model } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +16,7 @@ import { FileSizePipe } from '../file-size.pipe';
 import { PeerService } from '../service/peer.service';
 import { PeerEventType } from '../peer-event.model';
 import { download, error } from '../utils';
+import { defaultIfEmpty, lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
@@ -49,25 +50,26 @@ export class DashboardComponent {
         public peerService: PeerService,
     ) {
         this.blop.load();
-        peerService.getPeerEvent().subscribe({
-            next: event => {
-                if (event.type === PeerEventType.Data) {
-                    let message = event.payload as Message;
-                    console.log(message);
-                    switch (message.type) {
-                        case 'File':
-                            message.fileName;
-                            break;
-                        case 'Text': {
-                            message.text;
-                            break;
-                        }
-                    }
-                    this.blop.play();
+        peerService.peerEvent$.subscribe(event => {
+            switch (event.type) {
+                case PeerEventType.onConnectionReceiveData: {
+                    let message = event.data;
                     message = message._copy({ status: 'Success' });
                     this.messages.update(v => [...v, message]);
+                    this.blop.play();
+                    break;
                 }
-            },
+                case PeerEventType.onConnectionDisconnected: {
+                    let peer = event.peer;
+                    this.notificationService.open(`${peer} has lost`);
+                    break;
+                }
+                case PeerEventType.onConnectionConnected: {
+                    let peer = event.peer;
+                    this.notificationService.open(`New connection from: ${peer} `);
+                    break;
+                }
+            }
         });
     }
 
@@ -78,11 +80,13 @@ export class DashboardComponent {
 
     onSave(message: FileMessage) {
         message.file || error('Attachment is null');
-        download(message.file, message.fileType, message.fileName);
+        download(message.file, message.fileName, message.fileType);
         this.notificationService.open('Saved!');
     }
 
-    onSend() {
+    onSend(event: Event) {
+        event.preventDefault();
+
         let text = this.inputText().trim();
         if (text.length !== 0) {
             this.sendText(text);
@@ -102,14 +106,15 @@ export class DashboardComponent {
         target.value = '';
     }
 
-    isMe(message: Message) {
-        return message.sender === this.peerService.localId();
+    @HostListener('window:beforeunload')
+    async onBeforeUnload() {
+        await lastValueFrom(this.peerService.closePeerSession().pipe(defaultIfEmpty(0)));
     }
 
     private sendText(text: string) {
         let message = MessageMaker.textMessage(
             this.peerService.localId(),
-            this.peerService.getRemotePeers().next().value,
+            this.peerService.getRemotePeers().next().value || error('no remote peers'), // TODO
             text,
         );
         this.sendMessage(message);
@@ -118,7 +123,7 @@ export class DashboardComponent {
     private sendFile(file: File) {
         let message = MessageMaker.fileMessage(
             this.peerService.localId(),
-            this.peerService.getRemotePeers().next().value,
+            this.peerService.getRemotePeers().next().value || error('no remote peers'), // TODO
             file,
         );
         this.sendMessage(message);

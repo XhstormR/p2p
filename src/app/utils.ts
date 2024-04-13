@@ -22,7 +22,7 @@ export function indicate<T>(indicator: WritableSignal<boolean>) {
         );
 }
 
-export function download(data: BlobPart, fileType: string, fileName: string) {
+export function download(data: BlobPart, fileName: string, fileType?: string) {
     let blob = new Blob([data], { type: fileType || 'application/octet-stream' });
     let url = URL.createObjectURL(blob);
 

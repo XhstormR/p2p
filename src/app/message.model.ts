@@ -5,8 +5,6 @@ interface BaseMessage {
     readonly sender: string;
     readonly receiver: string;
     readonly timestamp: number;
-
-    toString(): string;
 }
 
 export interface TextMessage extends BaseMessage {

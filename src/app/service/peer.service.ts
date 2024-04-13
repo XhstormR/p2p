@@ -1,48 +1,88 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { effect, Injectable, signal } from '@angular/core';
+import { concat, Observable, Subject } from 'rxjs';
 import Peer, { DataConnection } from 'peerjs';
-import { getRandomInt } from '../utils';
+import { error, getRandomInt } from '../utils';
 import { Message } from '../message.model';
-import { PeerEvent, PeerEventType } from '../peer-event.model';
+import {
+    onConnectionConnected,
+    onConnectionDisconnected,
+    onConnectionReceiveData,
+    PeerEvent,
+} from '../peer-event.model';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PeerService {
-    private peer = new Peer(this.getRandomID());
-    private peerEvent$ = new Subject<PeerEvent>();
+    private peer?: Peer;
     private connectionMap = new Map<string, DataConnection>();
+
+    private peerEventSubject$ = new Subject<PeerEvent>();
+    readonly peerEvent$ = this.peerEventSubject$.asObservable();
+
     private localIdSignal = signal('');
     readonly localId = this.localIdSignal.asReadonly();
+
     private isOnlineSignal = signal(false);
     readonly isOnline = this.isOnlineSignal.asReadonly();
 
-    renew() {
+    constructor(private localStorageService: LocalStorageService) {
+        this.initLocalId();
+    }
+
+    renewPeerSession() {
+        this.localIdSignal.set(this.getRandomID());
+        return concat(this.closePeerSession(), this.startPeerSession());
+    }
+
+    startPeerSession() {
         return new Observable(subscriber => {
             try {
-                this.peer.destroy();
-                this.peer = new Peer(this.getRandomID());
-                this.listenPeer();
+                if (this.peer && this.isOnlineSignal()) {
+                    subscriber.complete();
+                } else {
+                    this.peer = new Peer(this.localIdSignal());
+                    this.listenPeer(this.peer);
 
-                this.peer.on('open', () => subscriber.complete());
-                this.peer.on('error', err => subscriber.error(err));
+                    this.peer.on('open', () => subscriber.complete());
+                    this.peer.on('error', err => subscriber.error(err));
+                }
             } catch (err) {
                 subscriber.error(err);
             }
         });
     }
 
-    connect(remoteId: string) {
+    closePeerSession() {
         return new Observable(subscriber => {
             try {
-                if (!this.isOnline()) subscriber.error('sender is lost');
+                if (this.peer) {
+                    this.peer.destroy();
+                    this.peer = undefined;
+                }
+                subscriber.complete();
+            } catch (err) {
+                subscriber.error(err);
+            }
+        });
+    }
 
-                let conn = this.peer.connect(remoteId);
-                this.listenConn(conn);
+    connectRemotePeer(remoteId: string) {
+        return new Observable(subscriber => {
+            try {
+                if (this.connectionMap.has(remoteId)) error('Connection existed');
 
-                conn.on('open', () => subscriber.complete());
-                this.peer.on('error', err => subscriber.error(err));
+                if (this.peer) {
+                    let conn = this.peer.connect(remoteId);
+                    this.listenConnection(conn);
+
+                    conn.on('open', () => subscriber.complete());
+                    this.peer.on('error', err => subscriber.error(err));
+                } else {
+                    subscriber.error('Host has lost');
+                }
             } catch (err) {
                 subscriber.error(err);
             }
@@ -52,8 +92,6 @@ export class PeerService {
     sendMessage(message: Message) {
         return new Observable(subscriber => {
             try {
-                if (!this.isOnline()) subscriber.error('sender is lost');
-
                 let conn = this.connectionMap.get(message.receiver);
                 if (conn) {
                     let result = conn.send(message);
@@ -63,7 +101,7 @@ export class PeerService {
                         subscriber.complete();
                     }
                 } else {
-                    subscriber.error('receiver is lost');
+                    subscriber.error(`${message.receiver} has lost`);
                 }
             } catch (err) {
                 subscriber.error(err);
@@ -71,66 +109,55 @@ export class PeerService {
         });
     }
 
-    getPeerEvent() {
-        return this.peerEvent$.asObservable();
-    }
-
     getRemotePeers() {
         return this.connectionMap.keys();
     }
 
-    private listenPeer() {
-        this.isOnlineSignal.set(false);
-        this.peer.on('open', id => {
+    private listenPeer(peer: Peer) {
+        peer.on('open', id => {
             console.log('peer open', id);
-            this.localIdSignal.set(id);
             this.isOnlineSignal.set(true);
         });
 
-        this.peer.on('connection', conn => {
+        peer.on('connection', conn => {
             console.log('peer connection', conn);
-            this.listenConn(conn);
-
-            this.peerEvent$.next({
-                type: PeerEventType.Connection,
-                payload: conn.peer,
-            });
+            this.listenConnection(conn);
         });
 
-        this.peer.on('disconnected', currentId => {
+        peer.on('disconnected', currentId => {
             console.warn('peer disconnected', currentId);
-            if (!this.peer.disconnected) {
-                this.peer.reconnect();
+            if (!peer.disconnected) {
+                console.warn('reconnect', currentId);
+                peer.reconnect();
             }
         });
 
-        this.peer.on('close', () => {
+        peer.on('close', () => {
             console.warn('peer close');
             this.isOnlineSignal.set(false);
         });
 
-        this.peer.on('error', err => {
+        peer.on('error', err => {
             console.error('peer error', err.type, err.message);
         });
     }
 
-    private listenConn(conn: DataConnection) {
+    private listenConnection(conn: DataConnection) {
         conn.on('open', () => {
             console.log('connection open');
             this.connectionMap.set(conn.peer, conn);
+            this.peerEventSubject$.next(onConnectionConnected(conn.peer));
         });
 
-        conn.on('data', data => {
-            console.log('connection data', data);
-            this.peerEvent$.next({
-                type: PeerEventType.Data,
-                payload: data,
-            });
+        conn.on('data', receivedData => {
+            console.log('connection data', receivedData);
+            this.peerEventSubject$.next(onConnectionReceiveData(receivedData as Message));
         });
 
         conn.on('close', () => {
             console.warn('connection close');
             this.connectionMap.delete(conn.peer);
+            this.peerEventSubject$.next(onConnectionDisconnected(conn.peer));
         });
 
         conn.on('error', err => {
@@ -139,6 +166,12 @@ export class PeerService {
     }
 
     private getRandomID() {
-        return `${getRandomInt(1000, 10000)}-${getRandomInt(1000, 10000)}`;
+        return `${getRandomInt(100, 1000)}-${getRandomInt(100, 1000)}`;
+    }
+
+    private initLocalId() {
+        let localId = this.localStorageService.getItem('local-id') || this.getRandomID();
+        this.localIdSignal.set(localId);
+        effect(() => this.localStorageService.setItem('local-id', this.localIdSignal()));
     }
 }
