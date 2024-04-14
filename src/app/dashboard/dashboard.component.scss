@@ -37,7 +37,7 @@ main {
     backdrop-filter: blur(0.5rem);
     border-radius: 1rem;
     color: mat.get-theme-color($theme, primary, default-contrast);
-    transition: height 0.5s;
+    transition: height 0.4s;
 }
 
 .scroller {
@@ -103,6 +103,12 @@ main {
 
 .file-input {
     display: none;
+}
+
+.drop-zone {
+    outline: #32a1ce dashed medium;
+    background: rgba(white, 0.2);
+    transition: background 0.15s linear;
 }
 
 @media screen and (max-width: 599.98px) {

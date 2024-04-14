@@ -17,6 +17,7 @@ import { PeerService } from '../service/peer.service';
 import { PeerEventType } from '../peer-event.model';
 import { download, error } from '../utils';
 import { defaultIfEmpty, lastValueFrom } from 'rxjs';
+import { DropZoneDirective } from '../drop-zone.directive';
 
 @Component({
     selector: 'app-dashboard',
@@ -35,6 +36,7 @@ import { defaultIfEmpty, lastValueFrom } from 'rxjs';
         DatePipe,
         FileSizePipe,
         ThrottleButtonDirective,
+        DropZoneDirective,
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
@@ -106,7 +108,10 @@ export class DashboardComponent {
     onFileChanged(event: Event) {
         let target = event.currentTarget as HTMLInputElement;
         this.selectedFile = target?.files?.[0];
-        target.value = '';
+    }
+
+    onFileDrop(files: Array<File>) {
+        this.selectedFile = files[0];
     }
 
     async onBeforeUnload() {

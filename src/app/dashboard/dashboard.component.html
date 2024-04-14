@@ -1,5 +1,5 @@
 <main>
-    <div class="content">
+    <div class="content" appDropZone (fileDropChange)="onFileDrop($event); fileTip.show()">
         <div class="scroller">
             <div class="message-list">
                 @for (message of messages(); track message.timestamp) {
@@ -73,7 +73,12 @@
         <mat-divider></mat-divider>
 
         <div class="chat-box">
-            <input #fileUpload (change)="onFileChanged($event)" class="file-input" type="file" />
+            <input
+                #fileUpload
+                (change)="onFileChanged($event); fileTip.show()"
+                class="file-input"
+                type="file"
+            />
             <mat-form-field appearance="outline">
                 <mat-label>Message</mat-label>
                 <textarea
@@ -87,6 +92,7 @@
                     placeholder="Enter: Send; Shift+Enter: Newline"
                 ></textarea>
                 <button
+                    #fileTip="matTooltip"
                     (click)="fileUpload.click()"
                     [color]="selectedFile === undefined ? '' : 'primary'"
                     [matTooltip]="selectedFile?.name || 'Select a file'"
