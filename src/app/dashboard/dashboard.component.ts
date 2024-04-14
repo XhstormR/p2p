@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +38,9 @@ import { defaultIfEmpty, lastValueFrom } from 'rxjs';
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
+    host: {
+        '(window:beforeunload)': 'onBeforeUnload()',
+    },
 })
 export class DashboardComponent {
     readonly messages = model<Message[]>([]);
@@ -106,7 +109,6 @@ export class DashboardComponent {
         target.value = '';
     }
 
-    @HostListener('window:beforeunload')
     async onBeforeUnload() {
         await lastValueFrom(this.peerService.closePeerSession().pipe(defaultIfEmpty(0)));
     }

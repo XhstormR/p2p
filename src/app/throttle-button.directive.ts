@@ -1,22 +1,19 @@
-import { Directive, ElementRef, HostListener, Input, numberAttribute } from '@angular/core';
+import { Directive, input, model } from '@angular/core';
 
 @Directive({
-    selector: 'button[app-throttle-button]',
+    selector: 'button[appThrottleButton]',
     standalone: true,
+    host: {
+        '[disabled]': 'disabled()',
+        '(click)': 'onClick()',
+    },
 })
 export class ThrottleButtonDirective {
-    @Input({ transform: numberAttribute })
-    throttleTime = 4_000;
+    throttleTime = input(4_000);
+    disabled = model(false);
 
-    private target: HTMLButtonElement;
-
-    constructor(el: ElementRef) {
-        this.target = el.nativeElement;
-    }
-
-    @HostListener('click')
     onClick() {
-        this.target.disabled = true;
-        setTimeout(() => (this.target.disabled = false), this.throttleTime);
+        this.disabled.set(true);
+        setTimeout(() => this.disabled.set(false), this.throttleTime());
     }
 }
