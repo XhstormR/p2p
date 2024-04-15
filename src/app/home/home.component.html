@@ -20,7 +20,7 @@
             </button>
         </section>
 
-        <mat-divider [vertical]="!isXSmall()"></mat-divider>
+        <mat-divider [vertical]="!layoutService.isXSmall()"></mat-divider>
 
         <form (ngSubmit)="onSubmit()" [formGroup]="remoteIdForm" class="right-side">
             <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">

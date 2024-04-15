@@ -8,7 +8,7 @@ export class ErrorHandlerService implements ErrorHandler {
     constructor(private notificationService: NotificationService) {}
 
     handleError(error: any) {
-        if (error instanceof Error) this.notificationService.open(error.message);
+        if (error instanceof Error) this.notificationService.error(error.message);
         console.error('handleError', error);
     }
 }

@@ -6,14 +6,13 @@ import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 import '../prototype.utils';
 import { LocalStorageService } from '../service/local-storage.service';
+import { LayoutService } from '../service/layout.service';
 
 @Component({
     selector: 'app-home',
@@ -34,10 +33,6 @@ import { LocalStorageService } from '../service/local-storage.service';
 export class HomeComponent {
     readonly isReloading = model(false);
     readonly isConnecting = model(false);
-    readonly isXSmall = this.breakpointObserver
-        .observe(Breakpoints.XSmall)
-        .pipe(map(result => result.matches))
-        ._toSignal();
     readonly remoteIdForm = new FormGroup({
         remoteId: new FormControl(this.localStorageService.getItem('remote-id'), this.remoteIdValidator()),
     });
@@ -45,8 +40,8 @@ export class HomeComponent {
     constructor(
         private router: Router,
         private ngZone: NgZone,
-        private breakpointObserver: BreakpointObserver,
         private localStorageService: LocalStorageService,
+        public layoutService: LayoutService,
         public peerService: PeerService,
     ) {
         peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
