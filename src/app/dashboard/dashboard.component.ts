@@ -18,6 +18,7 @@ import { PeerEventType } from '../peer-event.model';
 import { download, error } from '../utils';
 import { defaultIfEmpty, lastValueFrom } from 'rxjs';
 import { DropZoneDirective } from '../drop-zone.directive';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
     selector: 'app-dashboard',
@@ -52,6 +53,7 @@ export class DashboardComponent {
 
     constructor(
         private notificationService: NotificationService,
+        private clipboard: Clipboard,
         public peerService: PeerService,
     ) {
         this.blop.load();
@@ -79,8 +81,11 @@ export class DashboardComponent {
     }
 
     onCopy(message: TextMessage) {
-        navigator.clipboard.writeText(message.text);
-        this.notificationService.open('Copied!');
+        if (this.clipboard.copy(message.text)) {
+            this.notificationService.open('Copied!');
+        } else {
+            this.notificationService.open('Copy failed!');
+        }
     }
 
     onSave(message: FileMessage) {
