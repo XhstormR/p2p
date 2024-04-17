@@ -110,7 +110,7 @@ export class PeerService {
     }
 
     getRemotePeers() {
-        return this.connectionMap.keys();
+        return Array.from(this.connectionMap.keys());
     }
 
     private listenPeer(peer: Peer) {

@@ -11,6 +11,7 @@ $theme: mat.define-dark-theme(
         density: 0,
     )
 );
+$bg-white: rgba(white, 0.1);
 
 :host {
     --mat-divider-color: lightblue;
@@ -26,18 +27,36 @@ main {
     padding: 1rem;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
+.sidenav-container {
     width: 700px;
     height: 700px;
     max-width: 100%;
     max-height: 100%;
-    background: rgba(white, 0.1);
+    background: $bg-white;
     backdrop-filter: blur(0.5rem);
     border-radius: 1rem;
     color: mat.get-theme-color($theme, primary, default-contrast);
     transition: height 0.4s;
+}
+
+.sidenav-container mat-toolbar {
+    background: $bg-white;
+    justify-content: center;
+}
+
+.sidenav {
+    background: $bg-white;
+    width: 180px;
+}
+
+.absolute-menu {
+    position: absolute;
+    z-index: 1;
+}
+
+.sidenav-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .scroller {

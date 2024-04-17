@@ -9,16 +9,22 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThrottleButtonDirective } from '../throttle-button.directive';
-import { FileMessage, Message, MessageMaker, TextMessage } from '../message.model';
+import { FileMessage, Message, TextMessage } from '../message.model';
 import { NotificationService } from '../service/notification.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
 import { PeerService } from '../service/peer.service';
 import { PeerEventType } from '../peer-event.model';
 import { download, error } from '../utils';
-import { defaultIfEmpty, lastValueFrom } from 'rxjs';
+import { defaultIfEmpty, lastValueFrom, Subscription } from 'rxjs';
 import { DropZoneDirective } from '../drop-zone.directive';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { LayoutService } from '../service/layout.service';
+import { MessageService } from '../service/message.service';
+import { EventService } from '../service/event.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -33,6 +39,9 @@ import { Clipboard } from '@angular/cdk/clipboard';
         MatButtonModule,
         MatDividerModule,
         MatTooltipModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
         MatProgressBarModule,
         DatePipe,
         FileSizePipe,
@@ -46,26 +55,25 @@ import { Clipboard } from '@angular/cdk/clipboard';
     },
 })
 export class DashboardComponent {
-    readonly messages = model<Message[]>([]);
+    readonly peers = model(new Set<string>());
     readonly inputText = model('');
-    readonly blop = new Audio('/assets/sounds/blop.mp3');
-    selectedFile?: File;
+    readonly selectedFile = model<File>();
+    readonly selectedPeer = model<string>();
+    readonly selectedPeerMessages = model<Message[]>();
+    selectedPeerMessagesSubscriptions?: Subscription;
 
     constructor(
         private notificationService: NotificationService,
         private clipboard: Clipboard,
+        private messageService: MessageService,
+        private eventService: EventService,
+        public layoutService: LayoutService,
         public peerService: PeerService,
     ) {
-        this.blop.load();
+        this.peers.set(new Set(peerService.getRemotePeers()));
+
         peerService.peerEvent$.subscribe(event => {
             switch (event.type) {
-                case PeerEventType.onConnectionReceiveData: {
-                    let message = event.data;
-                    message = message._copy({ status: 'Success' });
-                    this.messages.update(v => [...v, message]);
-                    this.blop.play();
-                    break;
-                }
                 case PeerEventType.onConnectionDisconnected: {
                     let peer = event.peer;
                     this.notificationService.open(`${peer} has lost`);
@@ -73,6 +81,7 @@ export class DashboardComponent {
                 }
                 case PeerEventType.onConnectionConnected: {
                     let peer = event.peer;
+                    this.peers.update(v => new Set(v.add(peer)));
                     this.notificationService.open(`New connection from: ${peer} `);
                     break;
                 }
@@ -96,63 +105,41 @@ export class DashboardComponent {
 
     onSend(event: Event) {
         event.preventDefault();
+        let selectedPeer = this.selectedPeer() || error('no peer selected');
 
         let text = this.inputText().trim();
         if (text.length !== 0) {
-            this.sendText(text);
+            this.messageService.sendTextMessage(selectedPeer, text);
             this.inputText.set('');
         }
 
-        let size = this.selectedFile?.size || 0;
-        if (size !== 0 && this.selectedFile) {
-            this.sendFile(this.selectedFile);
-            this.selectedFile = undefined;
+        let selectedFile = this.selectedFile();
+        if (selectedFile && selectedFile.size !== 0) {
+            this.messageService.sendFileMessage(selectedPeer, selectedFile);
+            this.selectedFile.set(undefined);
         }
     }
 
     onFileChanged(event: Event) {
         let target = event.currentTarget as HTMLInputElement;
-        this.selectedFile = target?.files?.[0];
+        this.selectedFile.set(target?.files?.[0]);
     }
 
     onFileDrop(files: Array<File>) {
-        this.selectedFile = files[0];
+        this.selectedFile.set(files[0]);
+    }
+
+    onPeerChanged(event: MatSelectionListChange) {
+        let peer = event.options[0].value;
+        this.selectedPeer.set(peer);
+        this.selectedPeerMessages.set(this.messageService.getPeerMessages(peer));
+        this.selectedPeerMessagesSubscriptions?.unsubscribe();
+        this.selectedPeerMessagesSubscriptions = this.eventService.onEvent<Message[]>(peer, v =>
+            this.selectedPeerMessages.set([...v]),
+        );
     }
 
     async onBeforeUnload() {
         await lastValueFrom(this.peerService.closePeerSession().pipe(defaultIfEmpty(0)));
-    }
-
-    private sendText(text: string) {
-        let message = MessageMaker.textMessage(
-            this.peerService.localId(),
-            this.peerService.getRemotePeers().next().value || error('no remote peers'), // TODO
-            text,
-        );
-        this.sendMessage(message);
-    }
-
-    private sendFile(file: File) {
-        let message = MessageMaker.fileMessage(
-            this.peerService.localId(),
-            this.peerService.getRemotePeers().next().value || error('no remote peers'), // TODO
-            file,
-        );
-        this.sendMessage(message);
-    }
-
-    private sendMessage(message: Message) {
-        this.messages.update(v => [...v, message]);
-        this.peerService.sendMessage(message).subscribe({
-            complete: () => this.updateMessage(message._copy({ status: 'Success' })),
-            error: err => {
-                this.updateMessage(message._copy({ status: 'Failure' }));
-                error(err);
-            },
-        });
-    }
-
-    private updateMessage(message: Message) {
-        this.messages.update(v => v.map(old => (old.timestamp === message.timestamp ? message : old)));
     }
 }

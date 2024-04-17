@@ -21,6 +21,7 @@ export class AppComponent {
         { iconName: 'attach_file', url: '/assets/svg/attach_file.svg' },
         { iconName: 'error', url: '/assets/svg/error.svg' },
         { iconName: 'done', url: '/assets/svg/done.svg' },
+        { iconName: 'menu', url: '/assets/svg/menu.svg' },
     ];
 
     constructor(sanitizer: DomSanitizer, iconRegistry: MatIconRegistry) {

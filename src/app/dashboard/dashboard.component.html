@@ -1,117 +1,143 @@
 <main>
-    <div class="content" appDropZone (fileDropChange)="onFileDrop($event); fileTip.show()">
-        <div class="scroller">
-            <div class="message-list">
-                @for (message of messages(); track message.timestamp) {
-                    <div class="message" [class.me]="message.sender === peerService.localId()">
-                        @if (message.status === 'Failure') {
-                            <div>
-                                <mat-icon
-                                    svgIcon="error"
-                                    color="warn"
-                                    matTooltip="Message sending failed!"
-                                ></mat-icon>
-                            </div>
-                        }
-                        <mat-card class="message-card">
-                            <mat-card-header>
-                                <mat-card-subtitle>{{ message.sender }}</mat-card-subtitle>
-                            </mat-card-header>
-                            <mat-card-content>
-                                @switch (message.type) {
-                                    @case ('File') {
-                                        <pre>{{ message.fileName }}({{ message.fileSize | fileSize }})</pre>
-                                    }
-                                    @case ('Text') {
-                                        <pre>{{ message.text }}</pre>
-                                    }
-                                }
-                                <mat-divider></mat-divider>
-                            </mat-card-content>
-                            <mat-card-actions>
-                                @switch (message.type) {
-                                    @case ('File') {
-                                        <button
-                                            (click)="onSave(message)"
-                                            appThrottleButton
-                                            mat-icon-button
-                                            color="accent"
-                                            matTooltip="Save"
-                                            type="button"
-                                        >
-                                            <mat-icon svgIcon="download"></mat-icon>
-                                        </button>
-                                    }
-                                    @case ('Text') {
-                                        <button
-                                            (click)="onCopy(message)"
-                                            appThrottleButton
-                                            mat-icon-button
-                                            color="accent"
-                                            matTooltip="Copy to clipboard"
-                                            type="button"
-                                        >
-                                            <mat-icon svgIcon="content_copy"></mat-icon>
-                                        </button>
-                                    }
-                                }
-                                <span class="time">
-                                    {{ message.timestamp | date: 'HH:mm' }}
-                                </span>
-                            </mat-card-actions>
-                            <mat-card-footer>
-                                @if (message.status === 'Queued') {
-                                    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-                                }
-                            </mat-card-footer>
-                        </mat-card>
-                    </div>
+    <mat-sidenav-container
+        (fileDrop)="onFileDrop($event); fileTip.show()"
+        appDropZone
+        class="sidenav-container"
+        hasBackdrop="false"
+    >
+        <mat-sidenav
+            #drawer
+            [mode]="layoutService.isXSmall() ? 'push' : 'side'"
+            [opened]="layoutService.isXSmall() === false"
+            class="sidenav"
+        >
+            <mat-selection-list (selectionChange)="onPeerChanged($event); drawer.toggle()" multiple="false">
+                @for (peer of peers(); track peer) {
+                    <mat-list-option [value]="peer">{{ peer }}</mat-list-option>
                 }
+            </mat-selection-list>
+        </mat-sidenav>
+        <mat-sidenav-content class="sidenav-content">
+            @if (layoutService.isXSmall()) {
+                <mat-toolbar>
+                    <button (click)="drawer.toggle()" mat-icon-button type="button">
+                        <mat-icon svgIcon="menu"></mat-icon>
+                    </button>
+                </mat-toolbar>
+            } @else {
+                <button (click)="drawer.toggle()" mat-icon-button type="button" class="absolute-menu">
+                    <mat-icon svgIcon="menu"></mat-icon>
+                </button>
+            }
+            <div class="scroller">
+                <div class="message-list">
+                    @for (message of selectedPeerMessages(); track message.timestamp) {
+                        <div class="message" [class.me]="message.sender === peerService.localId()">
+                            @if (message.status === 'Failure') {
+                                <div>
+                                    <mat-icon svgIcon="error" color="warn" matTooltip="Message sending failed!"></mat-icon>
+                                </div>
+                            }
+                            <mat-card class="message-card">
+                                <mat-card-header>
+                                    <mat-card-subtitle>{{ message.sender }}</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    @switch (message.type) {
+                                        @case ('File') {
+                                            <pre>{{ message.fileName }}({{ message.fileSize | fileSize }})</pre>
+                                        }
+                                        @case ('Text') {
+                                            <pre>{{ message.text }}</pre>
+                                        }
+                                    }
+                                    <mat-divider></mat-divider>
+                                </mat-card-content>
+                                <mat-card-actions>
+                                    @switch (message.type) {
+                                        @case ('File') {
+                                            <button
+                                                (click)="onSave(message)"
+                                                appThrottleButton
+                                                mat-icon-button
+                                                color="accent"
+                                                matTooltip="Save"
+                                                type="button"
+                                            >
+                                                <mat-icon svgIcon="download"></mat-icon>
+                                            </button>
+                                        }
+                                        @case ('Text') {
+                                            <button
+                                                (click)="onCopy(message)"
+                                                appThrottleButton
+                                                mat-icon-button
+                                                color="accent"
+                                                matTooltip="Copy to clipboard"
+                                                type="button"
+                                            >
+                                                <mat-icon svgIcon="content_copy"></mat-icon>
+                                            </button>
+                                        }
+                                    }
+                                    <span class="time">
+                                        {{ message.timestamp | date: 'HH:mm' }}
+                                    </span>
+                                </mat-card-actions>
+                                <mat-card-footer>
+                                    @if (message.status === 'Queued') {
+                                        <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+                                    }
+                                </mat-card-footer>
+                            </mat-card>
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
 
-        <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
 
-        <div class="chat-box">
-            <input
-                #fileUpload
-                (change)="onFileChanged($event); fileTip.show()"
-                class="file-input"
-                type="file"
-            />
-            <mat-form-field appearance="outline">
-                <mat-label>Message</mat-label>
-                <textarea
-                    (keydown.enter)="onSend($event)"
-                    [(ngModel)]="inputText"
-                    autofocus
-                    cdkAutosizeMaxRows="8"
-                    cdkAutosizeMinRows="1"
-                    cdkTextareaAutosize
-                    matInput
-                    placeholder="⏎: Send; ⇧ + ⏎: Newline"
-                ></textarea>
+            <div class="chat-box">
+                <input
+                    #fileUpload
+                    (change)="onFileChanged($event); fileTip.show()"
+                    class="file-input"
+                    type="file"
+                />
+                <mat-form-field appearance="outline">
+                    <mat-label>Message</mat-label>
+                    <textarea
+                        (keydown.enter)="onSend($event)"
+                        [(ngModel)]="inputText"
+                        autofocus
+                        cdkAutosizeMaxRows="8"
+                        cdkAutosizeMinRows="1"
+                        cdkTextareaAutosize
+                        matInput
+                        placeholder="⏎: Send; ⇧ + ⏎: Newline"
+                    ></textarea>
+                    <button
+                        #fileTip="matTooltip"
+                        (click)="fileUpload.click()"
+                        [color]="selectedFile() === undefined ? '' : 'primary'"
+                        [matTooltip]="selectedFile()?.name || 'Select a file'"
+                        mat-icon-button
+                        matSuffix
+                        type="button"
+                    >
+                        <mat-icon svgIcon="attach_file"></mat-icon>
+                    </button>
+                </mat-form-field>
                 <button
-                    #fileTip="matTooltip"
-                    (click)="fileUpload.click()"
-                    [color]="selectedFile === undefined ? '' : 'primary'"
-                    [matTooltip]="selectedFile?.name || 'Select a file'"
-                    mat-icon-button
-                    matSuffix
+                    (click)="onSend($event)"
+                    [disabled]="selectedFile() === undefined && inputText().trim().length === 0"
+                    color="primary"
+                    mat-raised-button
                     type="button"
                 >
-                    <mat-icon svgIcon="attach_file"></mat-icon>
+                    Send
                 </button>
-            </mat-form-field>
-            <button
-                (click)="onSend($event)"
-                [disabled]="selectedFile === undefined && inputText().trim().length === 0"
-                color="primary"
-                mat-raised-button
-                type="button"
-            >
-                Send
-            </button>
-        </div>
-    </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </main>
