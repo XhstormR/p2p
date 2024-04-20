@@ -1,0 +1,51 @@
+:host,
+.scroller {
+    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.message-list {
+    padding: 1rem;
+}
+
+.message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    width: fit-content;
+    max-width: 80%;
+    margin-bottom: 1rem;
+
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.message-card {
+    border-radius: 0 1rem 1rem 1rem;
+    background-color: #243b4c;
+    overflow-x: hidden; // for progress bar
+}
+
+.message.me {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.message.me .message-card {
+    border-radius: 1rem 0 1rem 1rem;
+    background-color: #3d6a97;
+}
+
+.message-card .time {
+    margin-left: auto;
+    margin-right: 0.5rem;
+    color: rgba(white, 0.5);
+}
+
+.message-card pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
