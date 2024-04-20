@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs/operators';
+import '../prototype.utils';
 
 @Injectable({
     providedIn: 'root',

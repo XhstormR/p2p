@@ -1,4 +1,7 @@
-:host,
+:host {
+    display: contents;
+}
+
 .scroller {
     overflow-y: scroll;
     height: 100%;
@@ -24,9 +27,10 @@
 }
 
 .message-card {
+    overflow-x: hidden; // for progress bar due to border-radius
+
     border-radius: 0 1rem 1rem 1rem;
     background-color: #243b4c;
-    overflow-x: hidden; // for progress bar
 }
 
 .message.me {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -45,9 +45,12 @@ import { MessageListComponent } from '../message-list/message-list.component';
 })
 export class DashboardComponent {
     readonly peers = model(new Set<string>());
-    readonly inputText = model('');
-    readonly selectedFile = model<File>();
+    readonly inputText = model<string>();
     readonly selectedPeer = model<string>();
+    readonly selectedFile = model<File>();
+    readonly isSendDisabled = computed(
+        () => this.selectedFile() === undefined && (this.inputText()?.trim()?.length || 0) === 0,
+    );
 
     constructor(
         private notificationService: NotificationService,
@@ -76,12 +79,12 @@ export class DashboardComponent {
 
     onSend(event: Event) {
         event.preventDefault();
-        let selectedPeer = this.selectedPeer() || error('no peer selected');
+        let selectedPeer = this.selectedPeer() || error('No peer selected');
 
-        let text = this.inputText().trim();
-        if (text.length !== 0) {
+        let text = this.inputText()?.trim();
+        if (text && text.length !== 0) {
             this.messageService.sendTextMessage(selectedPeer, text);
-            this.inputText.set('');
+            this.inputText.set(undefined);
         }
 
         let selectedFile = this.selectedFile();
@@ -91,13 +94,13 @@ export class DashboardComponent {
         }
     }
 
+    onFileDrop(files: Array<File>) {
+        this.selectedFile.set(files[0]);
+    }
+
     onFileChanged(event: Event) {
         let target = event.currentTarget as HTMLInputElement;
         this.selectedFile.set(target?.files?.[0]);
-    }
-
-    onFileDrop(files: Array<File>) {
-        this.selectedFile.set(files[0]);
     }
 
     onPeerChanged(event: MatSelectionListChange) {

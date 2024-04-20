@@ -64,11 +64,29 @@ export class MessageService {
         let messages = this.getPeerMessages(peer);
         messages.push(message);
 
+        this.log(message);
         this.messageMap.set(peer, messages);
         this.notifyMessageChanged(peer);
     }
 
     private notifyMessageChanged(peer: string) {
         this.eventService.emitEvent(peer, this.messageMap.get(peer));
+    }
+
+    private log(message: Message) {
+        switch (message.type) {
+            case 'Text': {
+                console.debug(
+                    `[${message.timestamp}] ${message.sender} -> ${message.receiver}: ${message.text}`,
+                );
+                break;
+            }
+            case 'File': {
+                console.debug(
+                    `[${message.timestamp}] ${message.sender} -> ${message.receiver}: ${message.fileName} (size: ${message.fileSize} bytes)`,
+                );
+                break;
+            }
+        }
     }
 }

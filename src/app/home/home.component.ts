@@ -10,7 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
-import '../prototype.utils';
 import { LocalStorageService } from '../service/local-storage.service';
 import { LayoutService } from '../service/layout.service';
 
