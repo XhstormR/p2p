@@ -1,6 +1,6 @@
 interface BaseMessage {
     readonly type: MessageType;
-    readonly status: MessageStatus;
+    status: MessageStatus;
 
     readonly sender: string;
     readonly receiver: string;

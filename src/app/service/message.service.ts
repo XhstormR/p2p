@@ -4,6 +4,7 @@ import { Message, MessageMaker } from '../message.model';
 import { error } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 import { EventService } from './event.service';
+import { finalize } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +23,8 @@ export class MessageService {
             switch (event.type) {
                 case PeerEventType.onConnectionReceiveData: {
                     let message = event.data;
-                    this.addPeerMessage(message.sender, message._copy({ status: 'Success' }));
+                    message.status = 'Success';
+                    this.addPeerMessage(message.sender, message);
                     this.blop.play();
                     break;
                 }
@@ -46,29 +48,27 @@ export class MessageService {
 
     private sendPeerMessage(peer: string, message: Message) {
         this.addPeerMessage(peer, message);
-        this.peerService.sendMessage(message).subscribe({
-            complete: () => this.updatePeerMessage(peer, message._copy({ status: 'Success' })),
-            error: err => {
-                this.updatePeerMessage(peer, message._copy({ status: 'Failure' }));
-                error(err);
-            },
-        });
+        this.peerService
+            .sendMessage(message)
+            .pipe(finalize(() => this.notifyMessageChanged(peer)))
+            .subscribe({
+                complete: () => (message.status = 'Success'),
+                error: err => {
+                    message.status = 'Failure';
+                    error(err);
+                },
+            });
     }
 
     private addPeerMessage(peer: string, message: Message) {
-        let messages = this.messageMap.get(peer) || [];
+        let messages = this.getPeerMessages(peer);
         messages.push(message);
 
         this.messageMap.set(peer, messages);
-        this.eventService.emitEvent(peer, messages);
+        this.notifyMessageChanged(peer);
     }
 
-    private updatePeerMessage(peer: string, message: Message) {
-        let messages = this.messageMap.get(peer);
-        if (!messages) return;
-        messages = messages.map(old => (old.timestamp === message.timestamp ? message : old));
-
-        this.messageMap.set(peer, messages);
-        this.eventService.emitEvent(peer, messages);
+    private notifyMessageChanged(peer: string) {
+        this.eventService.emitEvent(peer, this.messageMap.get(peer));
     }
 }
