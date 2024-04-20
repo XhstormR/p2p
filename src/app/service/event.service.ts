@@ -1,30 +1,22 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { error } from '../utils';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EventService implements OnDestroy {
+export class EventService {
     private eventChannels = new Map<string, Subject<any>>();
-    private subscriptions: Subscription[] = [];
 
     public emitEvent(event: string, data: any) {
         this.eventChannels.get(event)?.next(data);
     }
 
-    public onEvent<T>(event: string, callback: (value: T) => void) {
+    public onEvent<T>(event: string) {
         this.registerEvent(event);
-        let subject = this.eventChannels.get(event) || error('');
-        let subscription = subject.subscribe(callback);
-        subscription.add(() => this.unregisterEvent(event));
-        this.subscriptions.push(subscription);
+        let subject: Subject<T> = this.eventChannels.get(event)!;
         console.debug(`[EventService] onEvent ${event}`, this.eventChannels);
-        return subscription;
-    }
-
-    ngOnDestroy() {
-        this.subscriptions.forEach(v => v.unsubscribe());
+        return subject.asObservable().pipe(finalize(() => this.unregisterEvent(event)));
     }
 
     private registerEvent(event: string) {

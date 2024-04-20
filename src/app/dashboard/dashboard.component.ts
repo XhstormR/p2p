@@ -134,9 +134,9 @@ export class DashboardComponent {
         this.selectedPeer.set(peer);
         this.selectedPeerMessages.set(this.messageService.getPeerMessages(peer));
         this.selectedPeerMessagesSubscriptions?.unsubscribe();
-        this.selectedPeerMessagesSubscriptions = this.eventService.onEvent<Message[]>(peer, v =>
-            this.selectedPeerMessages.set([...v]),
-        );
+        this.selectedPeerMessagesSubscriptions = this.eventService
+            .onEvent<Message[]>(peer)
+            .subscribe(v => this.selectedPeerMessages.set([...v]));
     }
 
     async onBeforeUnload() {

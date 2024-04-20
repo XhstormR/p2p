@@ -1,4 +1,4 @@
-import { Directive, model } from '@angular/core';
+import { Directive, model, output } from '@angular/core';
 
 @Directive({
     selector: '[appDropZone]',
@@ -12,7 +12,7 @@ import { Directive, model } from '@angular/core';
 })
 export class DropZoneDirective {
     enabled = model(false);
-    fileDrop = model<Array<File>>([]);
+    fileDrop = output<Array<File>>();
 
     onDrop(event: DragEvent) {
         this.enabled.set(false);
@@ -20,7 +20,7 @@ export class DropZoneDirective {
         let dataTransfer = event.dataTransfer;
         if (dataTransfer && dataTransfer.files.length > 0) {
             let files = Array.from(dataTransfer.files);
-            this.fileDrop.set(files);
+            this.fileDrop.emit(files);
         }
 
         return false;
