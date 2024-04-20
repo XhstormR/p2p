@@ -1,17 +1,15 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
     {
         path: 'dashboard',
         title: 'Dashboard',
-        component: DashboardComponent,
+        loadComponent: () => import('./dashboard/dashboard.component').then(mod => mod.DashboardComponent),
     },
     {
         path: '',
         title: 'Home Page',
-        component: HomeComponent,
+        loadComponent: () => import('./home/home.component').then(mod => mod.HomeComponent),
     },
     {
         path: '**',
