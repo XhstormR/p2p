@@ -13,15 +13,15 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AppComponent {
     private icons = [
-        { iconName: 'link', url: '/assets/svg/link.svg' },
-        { iconName: 'autorenew', url: '/assets/svg/autorenew.svg' },
-        { iconName: 'backspace', url: '/assets/svg/backspace.svg' },
-        { iconName: 'content_copy', url: '/assets/svg/content_copy.svg' },
-        { iconName: 'download', url: '/assets/svg/download.svg' },
-        { iconName: 'attach_file', url: '/assets/svg/attach_file.svg' },
-        { iconName: 'error', url: '/assets/svg/error.svg' },
-        { iconName: 'done', url: '/assets/svg/done.svg' },
-        { iconName: 'menu', url: '/assets/svg/menu.svg' },
+        { iconName: 'link', url: 'assets/svg/link.svg' },
+        { iconName: 'autorenew', url: 'assets/svg/autorenew.svg' },
+        { iconName: 'backspace', url: 'assets/svg/backspace.svg' },
+        { iconName: 'content_copy', url: 'assets/svg/content_copy.svg' },
+        { iconName: 'download', url: 'assets/svg/download.svg' },
+        { iconName: 'attach_file', url: 'assets/svg/attach_file.svg' },
+        { iconName: 'error', url: 'assets/svg/error.svg' },
+        { iconName: 'done', url: 'assets/svg/done.svg' },
+        { iconName: 'menu', url: 'assets/svg/menu.svg' },
     ];
 
     constructor(sanitizer: DomSanitizer, iconRegistry: MatIconRegistry) {

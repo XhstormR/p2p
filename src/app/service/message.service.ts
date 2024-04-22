@@ -11,7 +11,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class MessageService {
     private messageMap = new Map<string, Message[]>();
-    private blop = new Audio('/assets/sounds/blop.mp3');
+    private blop = new Audio('assets/sounds/blop.mp3');
 
     constructor(
         private peerService: PeerService,
