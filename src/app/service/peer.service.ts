@@ -1,5 +1,5 @@
 import { effect, Injectable, signal } from '@angular/core';
-import { concat, Observable, Subject } from 'rxjs';
+import { concat, Observable } from 'rxjs';
 import Peer, { DataConnection } from 'peerjs';
 import { error, getRandomInt } from '../utils';
 import { Message } from '../message.model';
@@ -7,10 +7,10 @@ import {
     onConnectionConnected,
     onConnectionDisconnected,
     onConnectionReceiveData,
-    PeerEvent,
 } from '../peer-event.model';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { LocalStorageService } from './local-storage.service';
+import { EventService } from './event.service';
 
 @Injectable({
     providedIn: 'root',
@@ -19,16 +19,16 @@ export class PeerService {
     private peer?: Peer;
     private connectionMap = new Map<string, DataConnection>();
 
-    private peerEventSubject$ = new Subject<PeerEvent>();
-    readonly peerEvent$ = this.peerEventSubject$.asObservable();
-
     private localIdSignal = signal('');
     readonly localId = this.localIdSignal.asReadonly();
 
     private isOnlineSignal = signal(false);
     readonly isOnline = this.isOnlineSignal.asReadonly();
 
-    constructor(private localStorageService: LocalStorageService) {
+    constructor(
+        private localStorageService: LocalStorageService,
+        private eventService: EventService,
+    ) {
         this.initLocalId();
     }
 
@@ -146,18 +146,18 @@ export class PeerService {
         conn.on('open', () => {
             console.log('connection open');
             this.connectionMap.set(conn.peer, conn);
-            this.peerEventSubject$.next(onConnectionConnected(conn.peer));
+            this.eventService.emitEvent('PeerEvent', onConnectionConnected(conn.peer));
         });
 
         conn.on('data', receivedData => {
             console.log('connection data', receivedData);
-            this.peerEventSubject$.next(onConnectionReceiveData(receivedData as Message));
+            this.eventService.emitEvent('PeerEvent', onConnectionReceiveData(receivedData as Message));
         });
 
         conn.on('close', () => {
             console.warn('connection close');
             this.connectionMap.delete(conn.peer);
-            this.peerEventSubject$.next(onConnectionDisconnected(conn.peer));
+            this.eventService.emitEvent('PeerEvent', onConnectionDisconnected(conn.peer));
         });
 
         conn.on('error', err => {

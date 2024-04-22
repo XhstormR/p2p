@@ -18,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { LayoutService } from '../service/layout.service';
 import { MessageService } from '../service/message.service';
 import { MessageListComponent } from '../message-list/message-list.component';
+import { EventService } from '../service/event.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -55,12 +56,13 @@ export class DashboardComponent {
     constructor(
         private notificationService: NotificationService,
         private messageService: MessageService,
+        private eventService: EventService,
         public layoutService: LayoutService,
         public peerService: PeerService,
     ) {
         this.peers.set(new Set(peerService.getRemotePeers()));
 
-        peerService.peerEvent$.subscribe(event => {
+        this.eventService.onEvent('PeerEvent').subscribe(event => {
             switch (event.type) {
                 case PeerEventType.onConnectionDisconnected: {
                     let peer = event.peer;

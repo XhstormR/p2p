@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { EventMap } from '../event.model';
 
 @Injectable({
     providedIn: 'root',
@@ -8,7 +9,7 @@ import { finalize } from 'rxjs/operators';
 export class EventService {
     private eventChannels = new Map<string, Subject<any>>();
 
-    public emitEvent(event: string, data: any) {
+    public emitEvent<T extends keyof EventMap, U extends EventMap[T]>(event: T, data: U) {
         let subject = this.eventChannels.get(event);
         if (subject) {
             subject.next(data);
@@ -18,15 +19,16 @@ export class EventService {
         }
     }
 
-    public onEvent<T>(event: string) {
-        this.registerEvent(event);
-        let subject: Subject<T> = this.eventChannels.get(event)!;
+    public onEvent<T extends keyof EventMap, U extends EventMap[T]>(event: T) {
+        let subject: Subject<U> = this.eventChannels.get(event) || this.registerEvent(event);
         console.debug(`[EventService] onEvent ${event}`, this.eventChannels);
         return subject.asObservable().pipe(finalize(() => this.unregisterEvent(event)));
     }
 
     private registerEvent(event: string) {
-        if (!this.eventChannels.has(event)) this.eventChannels.set(event, new Subject());
+        let subject = this.eventChannels.get(event) || new Subject();
+        this.eventChannels.set(event, subject);
+        return subject;
     }
 
     private unregisterEvent(event: string) {

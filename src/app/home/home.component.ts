@@ -12,6 +12,7 @@ import { error, indicate } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 import { LocalStorageService } from '../service/local-storage.service';
 import { LayoutService } from '../service/layout.service';
+import { EventService } from '../service/event.service';
 
 @Component({
     selector: 'app-home',
@@ -40,11 +41,12 @@ export class HomeComponent {
         private router: Router,
         private ngZone: NgZone,
         private localStorageService: LocalStorageService,
+        private eventService: EventService,
         public layoutService: LayoutService,
         public peerService: PeerService,
     ) {
         peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
-        peerService.peerEvent$.subscribe(event => {
+        this.eventService.onEvent('PeerEvent').subscribe(event => {
             if (event.type === PeerEventType.onConnectionConnected) {
                 this.goToDashboard();
             }

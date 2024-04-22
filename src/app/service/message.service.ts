@@ -19,7 +19,7 @@ export class MessageService {
     ) {
         this.blop.load();
 
-        peerService.peerEvent$.subscribe(event => {
+        this.eventService.onEvent('PeerEvent').subscribe(event => {
             switch (event.type) {
                 case PeerEventType.onConnectionReceiveData: {
                     let message = event.data;
@@ -70,7 +70,10 @@ export class MessageService {
     }
 
     private notifyMessageChanged(peer: string) {
-        this.eventService.emitEvent(peer, this.messageMap.get(peer));
+        this.eventService.emitEvent('MessageEvent', {
+            peer: peer,
+            messages: this.getPeerMessages(peer),
+        });
     }
 
     private log(message: Message) {
