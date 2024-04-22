@@ -32,6 +32,8 @@
                 minlength="7"
                 required
                 type="text"
+                inputmode="numeric"
+                pattern="\d{3}-\d{3}"
             />
             @if (remoteId.value) {
                 <button
@@ -45,7 +47,9 @@
                 </button>
             }
             @if (remoteIdForm.controls.remoteId.hasError('remoteId')) {
-                <mat-error>Please enter a valid Remote ID</mat-error>
+                <mat-error>Remote ID can't be the same as local ID</mat-error>
+            } @else if (remoteIdForm.controls.remoteId.hasError('pattern')) {
+                <mat-error>Please enter a valid remote ID</mat-error>
             } @else if (remoteIdForm.controls.remoteId.hasError('required')) {
                 <mat-error>Remote ID is <strong>required</strong></mat-error>
             }

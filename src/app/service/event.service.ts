@@ -9,7 +9,13 @@ export class EventService {
     private eventChannels = new Map<string, Subject<any>>();
 
     public emitEvent(event: string, data: any) {
-        this.eventChannels.get(event)?.next(data);
+        let subject = this.eventChannels.get(event);
+        if (subject) {
+            subject.next(data);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public onEvent<T>(event: string) {
