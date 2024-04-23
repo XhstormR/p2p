@@ -1,6 +1,8 @@
 <mat-sidenav-container
     (onFileDrop)="onFileDrop($event); fileTip.show()"
+    (onFilePaste)="onFileDrop($event); fileTip.show()"
     appDropZone
+    appPasteZone
     class="sidenav-container"
     hasBackdrop="false"
 >

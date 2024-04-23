@@ -19,6 +19,7 @@ import { LayoutService } from '../service/layout.service';
 import { MessageService } from '../service/message.service';
 import { MessageListComponent } from '../message-list/message-list.component';
 import { EventService } from '../service/event.service';
+import { PasteZoneDirective } from '../paste-zone.directive';
 
 @Component({
     selector: 'app-dashboard',
@@ -36,6 +37,7 @@ import { EventService } from '../service/event.service';
         MatSidenavModule,
         MatListModule,
         DropZoneDirective,
+        PasteZoneDirective,
         MessageListComponent,
     ],
     templateUrl: './dashboard.component.html',
