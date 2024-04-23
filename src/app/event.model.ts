@@ -10,3 +10,8 @@ export type MessageEvent = {
     peer: string;
     messages: Message[];
 };
+
+export const onMessageChanged = (peer: string, messages: Message[]): MessageEvent => ({
+    peer,
+    messages,
+});

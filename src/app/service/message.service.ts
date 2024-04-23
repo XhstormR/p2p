@@ -5,6 +5,7 @@ import { error } from '../utils';
 import { PeerEventType } from '../peer-event.model';
 import { EventService } from './event.service';
 import { finalize } from 'rxjs/operators';
+import { onMessageChanged } from '../event.model';
 
 @Injectable({
     providedIn: 'root',
@@ -70,10 +71,7 @@ export class MessageService {
     }
 
     private notifyMessageChanged(peer: string) {
-        this.eventService.emitEvent('MessageEvent', {
-            peer: peer,
-            messages: this.getPeerMessages(peer),
-        });
+        this.eventService.emitEvent('MessageEvent', onMessageChanged(peer, this.getPeerMessages(peer)));
     }
 
     private log(message: Message) {

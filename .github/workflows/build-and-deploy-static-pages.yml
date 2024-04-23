@@ -1,20 +1,12 @@
-name: Deploy static content to GitHub Pages
+name: build-and-deploy-static-pages
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -25,5 +17,15 @@ jobs:
     - uses: actions/upload-pages-artifact@v3
       with:
         path: ./dist/p2p/browser
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/deploy-pages@v4
       id: deployment
