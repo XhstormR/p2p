@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest",
+    "id": "p2p",
+    "name": "P2P",
+    "start_url": "index.html",
+    "display": "standalone",
+    "theme_color": "#18648A",
+    "background_color": "#18648A",
+    "description": "Transfer Files Cross-Platform. No Setup, No Signup.",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 # p2p
 
-[![Deploy static content to GitHub Pages](https://github.com/XhstormR/p2p/actions/workflows/static.yml/badge.svg)](https://github.com/XhstormR/p2p/actions/workflows/static.yml)
+[![build-and-deploy-static-pages](https://github.com/XhstormR/p2p/actions/workflows/build-and-deploy-static-pages.yml/badge.svg)](https://github.com/XhstormR/p2p/actions/workflows/build-and-deploy-static-pages.yml)
+
+Transfer Files Cross-Platform. No Setup, No Signup.
 
 https://xhstormr.github.io/p2p/
