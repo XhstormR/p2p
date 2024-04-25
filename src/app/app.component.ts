@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NoSleepService } from './service/no-sleep.service';
 
 @Component({
     selector: 'app-root',
@@ -24,7 +25,13 @@ export class AppComponent {
         { iconName: 'menu', url: 'assets/svg/menu.svg' },
     ];
 
-    constructor(sanitizer: DomSanitizer, iconRegistry: MatIconRegistry) {
+    constructor(
+        private noSleepService: NoSleepService,
+        sanitizer: DomSanitizer,
+        iconRegistry: MatIconRegistry,
+    ) {
+        this.noSleepService.on();
+
         this.icons.forEach(icon =>
             iconRegistry.addSvgIcon(icon.iconName, sanitizer.bypassSecurityTrustResourceUrl(icon.url)),
         );
