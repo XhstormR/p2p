@@ -33,9 +33,6 @@ import { EventService } from '../service/event.service';
 export class HomeComponent {
     readonly isReloading = model(false);
     readonly isConnecting = model(false);
-    readonly remoteIdForm = new FormGroup({
-        remoteId: new FormControl(this.localStorageService.getItem('remote-id'), this.remoteIdValidator()),
-    });
 
     constructor(
         private router: Router,
@@ -48,6 +45,7 @@ export class HomeComponent {
         peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
         this.eventService.onEvent('PeerEvent').subscribe(event => {
             if (event.type === PeerEventType.onConnectionConnected) {
+                this.localStorageService.setItem('remote-id', event.peer);
                 this.goToDashboard();
             }
         });
@@ -73,10 +71,12 @@ export class HomeComponent {
         this.ngZone.run(() => this.router.navigateByUrl('/dashboard', { skipLocationChange: true }));
     }
 
-    private remoteIdValidator() {
-        return (control: AbstractControl) => {
-            let isForbidden = control.value === this.peerService.localId();
-            return isForbidden ? { remoteId: { value: control.value } } : null;
-        };
-    }
+    private remoteIdValidator = (control: AbstractControl) => {
+        let isForbidden = control.value === this.peerService.localId();
+        return isForbidden ? { remoteId: { value: control.value } } : null;
+    };
+
+    readonly remoteIdForm = new FormGroup({
+        remoteId: new FormControl(this.localStorageService.getItem('remote-id'), this.remoteIdValidator),
+    });
 }

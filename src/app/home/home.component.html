@@ -1,7 +1,7 @@
 <div class="content">
     <section class="left-side">
         <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">
-            <mat-label>Local ID</mat-label>
+            <mat-label>Local Peer</mat-label>
             <input [value]="peerService.localId()" matInput readonly type="text" />
             @if (peerService.isOnline()) {
                 <mat-icon matSuffix svgIcon="done" color="accent" matTooltip="Online"></mat-icon>
@@ -23,7 +23,7 @@
 
     <form (ngSubmit)="onSubmit()" [formGroup]="remoteIdForm" class="right-side">
         <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">
-            <mat-label>Remote ID</mat-label>
+            <mat-label>Remote Peer</mat-label>
             <input
                 #remoteId
                 autofocus

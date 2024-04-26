@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NoSleepService } from './service/no-sleep.service';
+import { error } from './utils';
 
 @Component({
     selector: 'app-root',
@@ -30,7 +31,10 @@ export class AppComponent {
         sanitizer: DomSanitizer,
         iconRegistry: MatIconRegistry,
     ) {
-        this.noSleepService.on();
+        this.noSleepService.on().catch(err => {
+            console.warn(err);
+            error(`Request for wake lock failed: ${err}`);
+        });
 
         this.icons.forEach(icon =>
             iconRegistry.addSvgIcon(icon.iconName, sanitizer.bypassSecurityTrustResourceUrl(icon.url)),
