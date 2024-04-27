@@ -12,9 +12,9 @@
         [opened]="layoutService.isXSmall() === false"
         class="sidenav"
     >
-        <mat-selection-list (selectionChange)="onPeerChanged($event); drawer.toggle()" multiple="false">
+        <mat-selection-list [(ngModel)]="selectedPeer" (selectionChange)="drawer.toggle()" multiple="false">
             @for (peer of peers(); track peer) {
-                <mat-list-option [value]="peer">{{ peer }}</mat-list-option>
+                <mat-list-option [value]="peer" [selected]="$first">{{ peer }}</mat-list-option>
             } @empty {
                 <div class="empty-list">
                     <p>No peers online.</p>
@@ -35,7 +35,7 @@
             </button>
         }
 
-        <app-message-list [selectedPeer]="selectedPeer()"></app-message-list>
+        <app-message-list [selectedPeer]="selectedPeer()?.[0]"></app-message-list>
 
         <mat-divider></mat-divider>
 

@@ -12,7 +12,7 @@ import { PeerEventType } from '../peer-event.model';
 import { error } from '../utils';
 import { defaultIfEmpty, lastValueFrom } from 'rxjs';
 import { DropZoneDirective } from '../drop-zone.directive';
-import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LayoutService } from '../service/layout.service';
@@ -49,7 +49,7 @@ import { PasteZoneDirective } from '../paste-zone.directive';
 export class DashboardComponent {
     readonly peers = model(new Set<string>());
     readonly inputText = model<string>();
-    readonly selectedPeer = model<string>();
+    readonly selectedPeer = model<string[]>();
     readonly selectedFile = model<File>();
     readonly isSendDisabled = computed(
         () => this.selectedFile() === undefined && (this.inputText()?.trim()?.length || 0) === 0,
@@ -83,7 +83,7 @@ export class DashboardComponent {
 
     onSend(event: Event) {
         event.preventDefault();
-        let selectedPeer = this.selectedPeer() || error('No peer selected');
+        let selectedPeer = this.selectedPeer()?.[0] || error('No peer selected');
 
         let text = this.inputText()?.trim();
         if (text && text.length !== 0) {
@@ -105,11 +105,6 @@ export class DashboardComponent {
     onFileChanged(event: Event) {
         let target = event.currentTarget as HTMLInputElement;
         this.selectedFile.set(target?.files?.[0]);
-    }
-
-    onPeerChanged(event: MatSelectionListChange) {
-        let peer = event.options[0].value;
-        this.selectedPeer.set(peer);
     }
 
     async onBeforeUnload() {
