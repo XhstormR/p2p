@@ -3,12 +3,12 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     {
         path: 'dashboard',
-        title: 'Dashboard',
+        title: `${document.title} · Dashboard`,
         loadComponent: () => import('./dashboard/dashboard.component').then(mod => mod.DashboardComponent),
     },
     {
         path: '',
-        title: 'Home Page',
+        title: `${document.title} · Home Page`,
         loadComponent: () => import('./home/home.component').then(mod => mod.HomeComponent),
     },
     {

@@ -22,19 +22,20 @@
     <mat-divider [vertical]="!layoutService.isXSmall()"></mat-divider>
 
     <form (ngSubmit)="onSubmit()" [formGroup]="remoteIdForm" class="right-side">
-        <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">
+        <mat-form-field hintLabel="Remote ID" appearance="outline" style="width: calc(180px + 16px * 2)">
             <mat-label>Remote Peer</mat-label>
             <input
                 #remoteId
                 autofocus
                 formControlName="remoteId"
                 matInput
-                maxlength="7"
-                minlength="7"
+                maxlength="6"
+                minlength="6"
                 required
                 type="text"
                 inputmode="numeric"
-                pattern="\d{3}-\d{3}"
+                pattern="\d{6}"
+                placeholder="Ex. 123456"
             />
             @if (remoteId.value) {
                 <button
@@ -54,7 +55,7 @@
             } @else if (remoteIdForm.controls.remoteId.hasError('required')) {
                 <mat-error>Remote ID is <strong>required</strong></mat-error>
             }
-            <mat-hint align="end">{{ remoteId.value.length }} / 7</mat-hint>
+            <mat-hint align="end">{{ remoteId.value.length }} / 6</mat-hint>
         </mat-form-field>
 
         <button

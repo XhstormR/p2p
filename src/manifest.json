@@ -12,6 +12,12 @@
             "src": "favicon.png",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "assets/maskable_icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ]
 }

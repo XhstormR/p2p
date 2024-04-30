@@ -166,7 +166,7 @@ export class PeerService {
     }
 
     private getRandomID() {
-        return `${getRandomInt(100, 1000)}-${getRandomInt(100, 1000)}`;
+        return `${getRandomInt(100000, 1000000)}`;
     }
 
     private initLocalId() {
