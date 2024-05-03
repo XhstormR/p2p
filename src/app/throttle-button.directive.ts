@@ -1,11 +1,11 @@
-import { Directive, input, model } from '@angular/core';
+import { Directive, input, model } from "@angular/core";
 
 @Directive({
-    selector: 'button[appThrottleButton]',
+    selector: "button[appThrottleButton]",
     standalone: true,
     host: {
-        '[disabled]': 'disabled()',
-        '(click)': 'onClick()',
+        "[disabled]": "disabled()",
+        "(click)": "onClick()",
     },
 })
 export class ThrottleButtonDirective {

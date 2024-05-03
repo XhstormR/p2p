@@ -14,7 +14,7 @@
         }
 
         function saveDataURLAsFile(dataUrl, fileName) {
-            let link = document.createElement('a');
+            let link = document.createElement("a");
             link.href = dataUrl;
             link.download = fileName;
             document.body.appendChild(link);
@@ -23,8 +23,8 @@
         }
 
         function saveBlobToFile() {
-            let blob = new Blob(['Sample text'], { type: 'text/plain' });
-            convertBlobToDataURL(blob).then(dataUrl => saveDataURLAsFile(dataUrl, 'sample.txt'));
+            let blob = new Blob(["Sample text"], { type: "text/plain" });
+            convertBlobToDataURL(blob).then(dataUrl => saveDataURLAsFile(dataUrl, "sample.txt"));
         }
     </script>
 </html>

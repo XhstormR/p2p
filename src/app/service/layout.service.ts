@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { map, shareReplay } from 'rxjs/operators';
-import '../prototype.utils';
+import { Injectable } from "@angular/core";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { map, shareReplay } from "rxjs/operators";
+import "../prototype.utils";
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: "root",
 })
 export class LayoutService {
     readonly isXSmall = this.breakpointObserver

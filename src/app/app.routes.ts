@@ -1,19 +1,19 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 
 export const routes: Routes = [
     {
-        path: 'dashboard',
+        path: "dashboard",
         title: `${document.title} · Dashboard`,
-        loadComponent: () => import('./dashboard/dashboard.component').then(mod => mod.DashboardComponent),
+        loadComponent: () => import("./dashboard/dashboard.component").then(mod => mod.DashboardComponent),
     },
     {
-        path: '',
+        path: "",
         title: `${document.title} · Home Page`,
-        loadComponent: () => import('./home/home.component').then(mod => mod.HomeComponent),
+        loadComponent: () => import("./home/home.component").then(mod => mod.HomeComponent),
     },
     {
-        path: '**',
-        redirectTo: '',
-        pathMatch: 'full',
+        path: "**",
+        redirectTo: "",
+        pathMatch: "full",
     },
 ];

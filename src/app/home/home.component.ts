@@ -1,21 +1,21 @@
-import { ChangeDetectionStrategy, Component, model, NgZone } from '@angular/core';
-import { PeerService } from '../service/peer.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatInputModule } from '@angular/material/input';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
-import { error, indicate } from '../utils';
-import { PeerEventType } from '../peer-event.model';
-import { LocalStorageService } from '../service/local-storage.service';
-import { LayoutService } from '../service/layout.service';
-import { EventService } from '../service/event.service';
+import { ChangeDetectionStrategy, Component, model, NgZone } from "@angular/core";
+import { PeerService } from "../service/peer.service";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatInputModule } from "@angular/material/input";
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { Router } from "@angular/router";
+import { error, indicate } from "../utils";
+import { PeerEventType } from "../peer-event.model";
+import { LocalStorageService } from "../service/local-storage.service";
+import { LayoutService } from "../service/layout.service";
+import { EventService } from "../service/event.service";
 
 @Component({
-    selector: 'app-home',
+    selector: "app-home",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
@@ -27,8 +27,8 @@ import { EventService } from '../service/event.service';
         ReactiveFormsModule,
         MatProgressSpinnerModule,
     ],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss',
+    templateUrl: "./home.component.html",
+    styleUrl: "./home.component.scss",
 })
 export class HomeComponent {
     readonly isReloading = model(false);
@@ -43,9 +43,9 @@ export class HomeComponent {
         public peerService: PeerService,
     ) {
         peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
-        this.eventService.onEvent('PeerEvent').subscribe(event => {
+        this.eventService.onEvent("PeerEvent").subscribe(event => {
             if (event.type === PeerEventType.onConnectionConnected) {
-                this.localStorageService.setItem('remote-id', event.peer);
+                this.localStorageService.setItem("remote-id", event.peer);
                 this.goToDashboard();
             }
         });
@@ -56,19 +56,19 @@ export class HomeComponent {
     }
 
     onSubmit() {
-        let remoteId = this.remoteIdForm.value.remoteId || error('remoteId null');
+        let remoteId = this.remoteIdForm.value.remoteId || error("remoteId null");
 
         this.peerService
             .connectRemotePeer(remoteId)
             .pipe(indicate(this.isConnecting))
             .subscribe({
-                complete: () => this.localStorageService.setItem('remote-id', remoteId),
+                complete: () => this.localStorageService.setItem("remote-id", remoteId),
                 error: err => error(err),
             });
     }
 
     private goToDashboard() {
-        this.ngZone.run(() => this.router.navigateByUrl('/dashboard', { skipLocationChange: true }));
+        this.ngZone.run(() => this.router.navigateByUrl("/dashboard", { skipLocationChange: true }));
     }
 
     private remoteIdValidator = (control: AbstractControl) => {
@@ -77,6 +77,6 @@ export class HomeComponent {
     };
 
     readonly remoteIdForm = new FormGroup({
-        remoteId: new FormControl(this.localStorageService.getItem('remote-id'), this.remoteIdValidator),
+        remoteId: new FormControl(this.localStorageService.getItem("remote-id"), this.remoteIdValidator),
     });
 }

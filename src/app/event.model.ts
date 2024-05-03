@@ -1,5 +1,5 @@
-import { PeerEvent } from './peer-event.model';
-import { Message } from './message.model';
+import { PeerEvent } from "./peer-event.model";
+import { Message } from "./message.model";
 
 export type EventMap = {
     PeerEvent: PeerEvent;

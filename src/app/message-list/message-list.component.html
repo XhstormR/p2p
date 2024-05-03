@@ -2,7 +2,7 @@
     <div class="message-list">
         @for (message of selectedPeerMessages(); track message.timestamp) {
             <div class="message" [class.me]="message.sender === peerService.localId()">
-                @if (message.status === 'Failure') {
+                @if (message.status === "Failure") {
                     <div>
                         <mat-icon
                             svgIcon="error"
@@ -17,10 +17,10 @@
                     </mat-card-header>
                     <mat-card-content>
                         @switch (message.type) {
-                            @case ('File') {
+                            @case ("File") {
                                 <pre>{{ message.fileName }}({{ message.fileSize | fileSize }})</pre>
                             }
-                            @case ('Text') {
+                            @case ("Text") {
                                 <pre>{{ message.text }}</pre>
                             }
                         }
@@ -28,7 +28,7 @@
                     </mat-card-content>
                     <mat-card-actions>
                         @switch (message.type) {
-                            @case ('File') {
+                            @case ("File") {
                                 <button
                                     (click)="onSave(message)"
                                     appThrottleButton
@@ -40,7 +40,7 @@
                                     <mat-icon svgIcon="download"></mat-icon>
                                 </button>
                             }
-                            @case ('Text') {
+                            @case ("Text") {
                                 <button
                                     (click)="onCopy(message)"
                                     appThrottleButton
@@ -54,11 +54,11 @@
                             }
                         }
                         <span class="time">
-                            {{ message.timestamp | date: 'HH:mm' }}
+                            {{ message.timestamp | date: "HH:mm" }}
                         </span>
                     </mat-card-actions>
                     <mat-card-footer>
-                        @if (message.status === 'Queued') {
+                        @if (message.status === "Queued") {
                             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
                         }
                     </mat-card-footer>

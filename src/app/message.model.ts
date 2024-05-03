@@ -8,13 +8,13 @@ interface BaseMessage {
 }
 
 export interface TextMessage extends BaseMessage {
-    readonly type: 'Text';
+    readonly type: "Text";
 
     readonly text: string;
 }
 
 export interface FileMessage extends BaseMessage {
-    readonly type: 'File';
+    readonly type: "File";
 
     readonly file: File;
     readonly fileName: string;
@@ -22,8 +22,8 @@ export interface FileMessage extends BaseMessage {
     readonly fileSize: number;
 }
 
-export type MessageType = 'Text' | 'File';
-export type MessageStatus = 'Success' | 'Failure' | 'Queued';
+export type MessageType = "Text" | "File";
+export type MessageStatus = "Success" | "Failure" | "Queued";
 export type Message = TextMessage | FileMessage;
 
 export class MessageMaker {
@@ -31,11 +31,11 @@ export class MessageMaker {
         sender: string,
         receiver: string,
         text: string,
-        status: MessageStatus = 'Queued',
+        status: MessageStatus = "Queued",
         timestamp: number = Date.now(),
     ): TextMessage {
         return {
-            type: 'Text',
+            type: "Text",
             sender: sender,
             receiver: receiver,
             text: text,
@@ -48,11 +48,11 @@ export class MessageMaker {
         sender: string,
         receiver: string,
         file: File,
-        status: MessageStatus = 'Queued',
+        status: MessageStatus = "Queued",
         timestamp: number = Date.now(),
     ): FileMessage {
         return {
-            type: 'File',
+            type: "File",
             sender: sender,
             receiver: receiver,
             file: file,

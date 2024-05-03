@@ -1,28 +1,28 @@
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
-import { MatDividerModule } from '@angular/material/divider';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { NotificationService } from '../service/notification.service';
-import { PeerService } from '../service/peer.service';
-import { PeerEventType } from '../peer-event.model';
-import { error } from '../utils';
-import { defaultIfEmpty, lastValueFrom } from 'rxjs';
-import { DropZoneDirective } from '../drop-zone.directive';
-import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { LayoutService } from '../service/layout.service';
-import { MessageService } from '../service/message.service';
-import { MessageListComponent } from '../message-list/message-list.component';
-import { EventService } from '../service/event.service';
-import { PasteZoneDirective } from '../paste-zone.directive';
+import { ChangeDetectionStrategy, Component, computed, model } from "@angular/core";
+import { MatDividerModule } from "@angular/material/divider";
+import { TextFieldModule } from "@angular/cdk/text-field";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { NotificationService } from "../service/notification.service";
+import { PeerService } from "../service/peer.service";
+import { PeerEventType } from "../peer-event.model";
+import { error } from "../utils";
+import { defaultIfEmpty, lastValueFrom } from "rxjs";
+import { DropZoneDirective } from "../drop-zone.directive";
+import { MatListModule } from "@angular/material/list";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { LayoutService } from "../service/layout.service";
+import { MessageService } from "../service/message.service";
+import { MessageListComponent } from "../message-list/message-list.component";
+import { EventService } from "../service/event.service";
+import { PasteZoneDirective } from "../paste-zone.directive";
 
 @Component({
-    selector: 'app-dashboard',
+    selector: "app-dashboard",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
@@ -40,10 +40,10 @@ import { PasteZoneDirective } from '../paste-zone.directive';
         PasteZoneDirective,
         MessageListComponent,
     ],
-    templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.scss',
+    templateUrl: "./dashboard.component.html",
+    styleUrl: "./dashboard.component.scss",
     host: {
-        '(window:beforeunload)': 'onBeforeUnload()',
+        "(window:beforeunload)": "onBeforeUnload()",
     },
 })
 export class DashboardComponent {
@@ -64,7 +64,7 @@ export class DashboardComponent {
     ) {
         this.peers.set(new Set(peerService.getRemotePeers()));
 
-        this.eventService.onEvent('PeerEvent').subscribe(event => {
+        this.eventService.onEvent("PeerEvent").subscribe(event => {
             switch (event.type) {
                 case PeerEventType.onConnectionDisconnected: {
                     let peer = event.peer;
@@ -83,7 +83,7 @@ export class DashboardComponent {
 
     onSend(event: Event) {
         event.preventDefault();
-        let selectedPeer = this.selectedPeer()?.[0] || error('No peer selected');
+        let selectedPeer = this.selectedPeer()?.[0] || error("No peer selected");
 
         let text = this.inputText()?.trim();
         if (text && text.length !== 0) {

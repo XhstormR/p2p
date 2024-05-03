@@ -1,25 +1,25 @@
-import { effect, Injectable, signal } from '@angular/core';
-import { concat, Observable } from 'rxjs';
-import Peer, { DataConnection } from 'peerjs';
-import { error, getRandomInt } from '../utils';
-import { Message } from '../message.model';
+import { effect, Injectable, signal } from "@angular/core";
+import { concat, Observable } from "rxjs";
+import Peer, { DataConnection } from "peerjs";
+import { error, getRandomInt } from "../utils";
+import { Message } from "../message.model";
 import {
     onConnectionConnected,
     onConnectionDisconnected,
     onConnectionReceiveData,
-} from '../peer-event.model';
-import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { LocalStorageService } from './local-storage.service';
-import { EventService } from './event.service';
+} from "../peer-event.model";
+import { fromPromise } from "rxjs/internal/observable/innerFrom";
+import { LocalStorageService } from "./local-storage.service";
+import { EventService } from "./event.service";
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: "root",
 })
 export class PeerService {
     private peer?: Peer;
     private connectionMap = new Map<string, DataConnection>();
 
-    private localIdSignal = signal('');
+    private localIdSignal = signal("");
     readonly localId = this.localIdSignal.asReadonly();
 
     private isOnlineSignal = signal(false);
@@ -46,8 +46,8 @@ export class PeerService {
                     this.peer = new Peer(this.localIdSignal());
                     this.listenPeer(this.peer);
 
-                    this.peer.on('open', () => subscriber.complete());
-                    this.peer.on('error', err => subscriber.error(err));
+                    this.peer.on("open", () => subscriber.complete());
+                    this.peer.on("error", err => subscriber.error(err));
                 }
             } catch (err) {
                 subscriber.error(err);
@@ -72,16 +72,16 @@ export class PeerService {
     connectRemotePeer(remoteId: string) {
         return new Observable(subscriber => {
             try {
-                if (this.connectionMap.has(remoteId)) error('Connection existed');
+                if (this.connectionMap.has(remoteId)) error("Connection existed");
 
                 if (this.peer) {
                     let conn = this.peer.connect(remoteId);
                     this.listenConnection(conn);
 
-                    conn.on('open', () => subscriber.complete());
-                    this.peer.on('error', err => subscriber.error(err));
+                    conn.on("open", () => subscriber.complete());
+                    this.peer.on("error", err => subscriber.error(err));
                 } else {
-                    subscriber.error('Host has lost');
+                    subscriber.error("Host has lost");
                 }
             } catch (err) {
                 subscriber.error(err);
@@ -114,54 +114,54 @@ export class PeerService {
     }
 
     private listenPeer(peer: Peer) {
-        peer.on('open', id => {
-            console.log('peer open', id);
+        peer.on("open", id => {
+            console.log("peer open", id);
             this.isOnlineSignal.set(true);
         });
 
-        peer.on('connection', conn => {
-            console.log('peer connection', conn);
+        peer.on("connection", conn => {
+            console.log("peer connection", conn);
             this.listenConnection(conn);
         });
 
-        peer.on('disconnected', currentId => {
-            console.warn('peer disconnected', currentId);
+        peer.on("disconnected", currentId => {
+            console.warn("peer disconnected", currentId);
             if (!peer.disconnected) {
-                console.warn('reconnect', currentId);
+                console.warn("reconnect", currentId);
                 peer.reconnect();
             }
         });
 
-        peer.on('close', () => {
-            console.warn('peer close');
+        peer.on("close", () => {
+            console.warn("peer close");
             this.isOnlineSignal.set(false);
         });
 
-        peer.on('error', err => {
-            console.error('peer error', err.type, err.message);
+        peer.on("error", err => {
+            console.error("peer error", err.type, err.message);
         });
     }
 
     private listenConnection(conn: DataConnection) {
-        conn.on('open', () => {
-            console.log('connection open');
+        conn.on("open", () => {
+            console.log("connection open");
             this.connectionMap.set(conn.peer, conn);
-            this.eventService.emitEvent('PeerEvent', onConnectionConnected(conn.peer));
+            this.eventService.emitEvent("PeerEvent", onConnectionConnected(conn.peer));
         });
 
-        conn.on('data', receivedData => {
-            console.log('connection data', receivedData);
-            this.eventService.emitEvent('PeerEvent', onConnectionReceiveData(receivedData as Message));
+        conn.on("data", receivedData => {
+            console.log("connection data", receivedData);
+            this.eventService.emitEvent("PeerEvent", onConnectionReceiveData(receivedData as Message));
         });
 
-        conn.on('close', () => {
-            console.warn('connection close');
+        conn.on("close", () => {
+            console.warn("connection close");
             this.connectionMap.delete(conn.peer);
-            this.eventService.emitEvent('PeerEvent', onConnectionDisconnected(conn.peer));
+            this.eventService.emitEvent("PeerEvent", onConnectionDisconnected(conn.peer));
         });
 
-        conn.on('error', err => {
-            console.error('connection error', err.type, err.message);
+        conn.on("error", err => {
+            console.error("connection error", err.type, err.message);
         });
     }
 
@@ -170,8 +170,8 @@ export class PeerService {
     }
 
     private initLocalId() {
-        let localId = this.localStorageService.getItem('local-id') || this.getRandomID();
+        let localId = this.localStorageService.getItem("local-id") || this.getRandomID();
         this.localIdSignal.set(localId);
-        effect(() => this.localStorageService.setItem('local-id', this.localIdSignal()));
+        effect(() => this.localStorageService.setItem("local-id", this.localIdSignal()));
     }
 }

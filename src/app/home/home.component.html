@@ -48,11 +48,11 @@
                     <mat-icon svgIcon="backspace"></mat-icon>
                 </button>
             }
-            @if (remoteIdForm.controls.remoteId.hasError('remoteId')) {
+            @if (remoteIdForm.controls.remoteId.hasError("remoteId")) {
                 <mat-error>Remote ID can't be the same as local ID</mat-error>
-            } @else if (remoteIdForm.controls.remoteId.hasError('pattern')) {
+            } @else if (remoteIdForm.controls.remoteId.hasError("pattern")) {
                 <mat-error>Please enter a valid remote ID</mat-error>
-            } @else if (remoteIdForm.controls.remoteId.hasError('required')) {
+            } @else if (remoteIdForm.controls.remoteId.hasError("required")) {
                 <mat-error>Remote ID is <strong>required</strong></mat-error>
             }
             <mat-hint align="end">{{ remoteId.value.length }} / 6</mat-hint>

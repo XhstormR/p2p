@@ -1,10 +1,10 @@
-import { Directive, output } from '@angular/core';
+import { Directive, output } from "@angular/core";
 
 @Directive({
-    selector: '[appPasteZone]',
+    selector: "[appPasteZone]",
     standalone: true,
     host: {
-        '(paste)': 'onPaste($event)',
+        "(paste)": "onPaste($event)",
     },
 })
 export class PasteZoneDirective {

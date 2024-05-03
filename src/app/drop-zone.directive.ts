@@ -1,13 +1,13 @@
-import { Directive, model, output } from '@angular/core';
+import { Directive, model, output } from "@angular/core";
 
 @Directive({
-    selector: '[appDropZone]',
+    selector: "[appDropZone]",
     standalone: true,
     host: {
-        '[class.drop-zone]': 'enabled()',
-        '(drop)': 'onDrop($event)',
-        '(dragover)': 'onDragOver()',
-        '(dragleave)': 'onDragLeave()',
+        "[class.drop-zone]": "enabled()",
+        "(drop)": "onDrop($event)",
+        "(dragover)": "onDragOver()",
+        "(dragleave)": "onDragLeave()",
     },
 })
 export class DropZoneDirective {

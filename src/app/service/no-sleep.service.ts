@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: "root",
 })
 export class NoSleepService {
     private wakeLock?: WakeLockSentinel;
@@ -9,13 +9,13 @@ export class NoSleepService {
     public async on() {
         if (this.wakeLock) return;
 
-        console.log('request wakeLock');
-        this.wakeLock = await navigator.wakeLock.request('screen');
+        console.log("request wakeLock");
+        this.wakeLock = await navigator.wakeLock.request("screen");
         this.wakeLock.onrelease = () => {
-            console.log('release wakeLock');
+            console.log("release wakeLock");
             this.wakeLock = undefined;
         };
-        document.addEventListener('visibilitychange', this.handleVisibilityChange);
+        document.addEventListener("visibilitychange", this.handleVisibilityChange);
     }
 
     public async off() {
@@ -23,11 +23,11 @@ export class NoSleepService {
             await this.wakeLock.release();
             this.wakeLock = undefined;
         }
-        document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
     }
 
     private handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
+        if (document.visibilityState === "visible") {
             this.on();
         }
     };

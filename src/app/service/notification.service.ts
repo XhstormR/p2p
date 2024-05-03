@@ -1,8 +1,8 @@
-import { Injectable, NgZone } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable, NgZone } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: "root",
 })
 export class NotificationService {
     constructor(
@@ -11,7 +11,7 @@ export class NotificationService {
     ) {}
 
     public open(message: string, duration: number = 10_000) {
-        this.ngZone.run(() => this.snackBar.open(message, 'OK', { duration: duration }));
+        this.ngZone.run(() => this.snackBar.open(message, "OK", { duration: duration }));
     }
 
     public error(message: string, duration: number = 10_000) {

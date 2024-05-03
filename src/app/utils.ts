@@ -1,6 +1,6 @@
-import { WritableSignal } from '@angular/core';
-import { defer, Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { WritableSignal } from "@angular/core";
+import { defer, Observable } from "rxjs";
+import { finalize } from "rxjs/operators";
 
 export function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -23,13 +23,13 @@ export function indicate<T>(indicator: WritableSignal<boolean>) {
 }
 
 export function download(data: BlobPart, fileName: string, fileType?: string) {
-    let blob = new Blob([data], { type: fileType || 'application/octet-stream' });
+    let blob = new Blob([data], { type: fileType || "application/octet-stream" });
     let url = URL.createObjectURL(blob);
 
-    let link = document.createElement('a');
+    let link = document.createElement("a");
     link.href = url;
     link.download = fileName;
-    link.style.display = 'none';
+    link.style.display = "none";
     document.body.appendChild(link);
     link.click();
 

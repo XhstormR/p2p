@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { EventMap } from '../event.model';
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import { finalize } from "rxjs/operators";
+import { EventMap } from "../event.model";
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: "root",
 })
 export class EventService {
     private eventChannels = new Map<string, Subject<any>>();
