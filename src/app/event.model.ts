@@ -1,7 +1,7 @@
 import { PeerEvent } from "./peer-event.model";
 import { Message } from "./message.model";
 
-export type EventMap = {
+export type EventTypeMap = {
     PeerEvent: PeerEvent;
     MessageEvent: MessageEvent;
 };
