@@ -7,7 +7,6 @@ import { error } from "./utils";
 
 @Component({
     selector: "app-root",
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RouterOutlet],
     templateUrl: "./app.component.html",

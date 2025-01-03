@@ -2,7 +2,6 @@ import { Directive, model, output } from "@angular/core";
 
 @Directive({
     selector: "[appDropZone]",
-    standalone: true,
     host: {
         "[class.drop-zone]": "enabled()",
         "(drop)": "onDrop($event)",
