@@ -16,7 +16,6 @@ import { EventService } from "../service/event.service";
 
 @Component({
     selector: "app-home",
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIconModule,

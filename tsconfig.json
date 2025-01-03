@@ -10,9 +10,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": false,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
@@ -20,12 +19,8 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "allowUnusedLabels": false,
-    "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "noUnusedLocals": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

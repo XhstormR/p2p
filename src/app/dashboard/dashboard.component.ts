@@ -23,7 +23,6 @@ import { PasteZoneDirective } from "../paste-zone.directive";
 
 @Component({
     selector: "app-dashboard",
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,

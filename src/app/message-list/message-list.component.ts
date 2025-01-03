@@ -18,7 +18,6 @@ import { PeerService } from "../service/peer.service";
 
 @Component({
     selector: "app-message-list",
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatIconModule,

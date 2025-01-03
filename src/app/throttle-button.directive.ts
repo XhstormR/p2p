@@ -2,7 +2,6 @@ import { Directive, input, model } from "@angular/core";
 
 @Directive({
     selector: "button[appThrottleButton]",
-    standalone: true,
     host: {
         "[disabled]": "disabled()",
         "(click)": "onClick()",
