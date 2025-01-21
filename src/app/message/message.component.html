@@ -16,6 +16,9 @@
             @switch (message.type) {
                 @case ("File") {
                     <pre>{{ message.fileName }}({{ message.fileSize | fileSize }})</pre>
+                    @if (isImage) {
+                        <img [src]="imageUrl" alt="image" style="max-width: 100%" />
+                    }
                 }
                 @case ("Text") {
                     <pre>{{ message.text }}</pre>

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { FileSizePipe } from "../file-size.pipe";
 import { MatCardModule } from "@angular/material/card";
@@ -30,8 +30,13 @@ import { download, error } from "../utils";
     templateUrl: "./message.component.html",
     styleUrl: "./message.component.scss",
 })
-export class MessageComponent {
-    @Input() message!: Message;
+export class MessageComponent implements OnInit, OnDestroy {
+    @Input()
+    message!: Message;
+
+    isImage = false;
+    imageUrl: string | undefined;
+    readonly imagePattern = /^image\/.+$/;
 
     constructor(
         private notificationService: NotificationService,
@@ -51,5 +56,17 @@ export class MessageComponent {
         message.file || error("Attachment is null");
         download(message.file, message.fileName, message.fileType);
         this.notificationService.open("Saved!");
+    }
+
+    ngOnInit(): void {
+        if (this.message.type == "File" && this.imagePattern.test(this.message.fileType)) {
+            let blob = new Blob([this.message.file], { type: this.message.fileType });
+            this.isImage = true;
+            this.imageUrl = URL.createObjectURL(blob);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.imageUrl) URL.revokeObjectURL(this.imageUrl);
     }
 }
