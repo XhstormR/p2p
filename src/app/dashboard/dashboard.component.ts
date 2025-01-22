@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, effect, model } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { TextFieldModule } from "@angular/cdk/text-field";
 import { MatButtonModule } from "@angular/material/button";
@@ -10,7 +10,7 @@ import { NotificationService } from "../service/notification.service";
 import { PeerService } from "../service/peer.service";
 import { PeerEventType } from "../peer-event.model";
 import { error } from "../utils";
-import { defaultIfEmpty, lastValueFrom } from "rxjs";
+import { concat, defaultIfEmpty, lastValueFrom } from "rxjs";
 import { DropZoneDirective } from "../drop-zone.directive";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -20,6 +20,7 @@ import { MessageService } from "../service/message.service";
 import { MessageListComponent } from "../message-list/message-list.component";
 import { EventService } from "../service/event.service";
 import { PasteZoneDirective } from "../paste-zone.directive";
+import { LocalStorageService } from "../service/local-storage.service";
 
 @Component({
     selector: "app-dashboard",
@@ -42,7 +43,7 @@ import { PasteZoneDirective } from "../paste-zone.directive";
     templateUrl: "./dashboard.component.html",
     styleUrl: "./dashboard.component.scss",
     host: {
-        "(window:beforeunload)": "onBeforeUnload()",
+        "(window:beforeunload)": "onBeforeUnload($event)",
     },
 })
 export class DashboardComponent {
@@ -56,6 +57,7 @@ export class DashboardComponent {
 
     constructor(
         private notificationService: NotificationService,
+        private localStorageService: LocalStorageService,
         private messageService: MessageService,
         private eventService: EventService,
         public layoutService: LayoutService,
@@ -76,6 +78,16 @@ export class DashboardComponent {
                     this.notificationService.open(`New connection from: ${peer} `);
                     break;
                 }
+            }
+        });
+
+        effect(() => {
+            if (!this.peerService.isOnline()) {
+                let remoteId = this.localStorageService.getItem("remote-id") || error("remote-id is null");
+                concat(
+                    this.peerService.startPeerSession(),
+                    this.peerService.connectRemotePeer(remoteId),
+                ).subscribe();
             }
         });
     }
@@ -106,7 +118,9 @@ export class DashboardComponent {
         this.selectedFile.set(target?.files?.[0]);
     }
 
-    async onBeforeUnload() {
+    async onBeforeUnload(event: BeforeUnloadEvent) {
+        event.preventDefault();
+        event.returnValue = true;
         await lastValueFrom(this.peerService.closePeerSession().pipe(defaultIfEmpty(0)));
     }
 }
