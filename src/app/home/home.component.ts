@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model, NgZone } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, model, NgZone } from "@angular/core";
 import { PeerService } from "../service/peer.service";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
@@ -7,12 +7,14 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from "@a
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { error, indicate } from "../utils";
 import { PeerEventType } from "../peer-event.model";
 import { LocalStorageService } from "../service/local-storage.service";
 import { LayoutService } from "../service/layout.service";
 import { EventService } from "../service/event.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import QRCode, { QRCodeToStringOptions } from "qrcode";
 
 @Component({
     selector: "app-home",
@@ -32,21 +34,42 @@ import { EventService } from "../service/event.service";
 export class HomeComponent {
     readonly isReloading = model(false);
     readonly isConnecting = model(false);
+    readonly qrcode = model();
+
+    readonly mobilePattern = /android|ios|ipad|mobile/i;
+    readonly isMobile = this.mobilePattern.test(navigator.userAgent);
 
     constructor(
         private router: Router,
         private ngZone: NgZone,
         private localStorageService: LocalStorageService,
-        private eventService: EventService,
         public layoutService: LayoutService,
         public peerService: PeerService,
+        eventService: EventService,
+        sanitizer: DomSanitizer,
+        route: ActivatedRoute,
     ) {
         peerService.startPeerSession().pipe(indicate(this.isReloading)).subscribe();
-        this.eventService.onEvent("PeerEvent").subscribe(event => {
+        eventService.onEvent("PeerEvent").subscribe(event => {
             if (event.type === PeerEventType.onConnectionConnected) {
                 this.localStorageService.setItem("remote-id", event.peer);
                 this.goToDashboard();
             }
+        });
+
+        route.queryParams.subscribe(params => {
+            if (params["remoteId"]) this.remoteIdForm.setValue({ remoteId: params["remoteId"] });
+        });
+
+        effect(() => {
+            let url = `https://xhstormr.github.io/p2p?remoteId=${peerService.localId()}`;
+            let opt: QRCodeToStringOptions = {
+                type: "svg",
+            };
+            QRCode.toString(url, opt, (err, svg) => {
+                if (err) throw err;
+                this.qrcode.set(sanitizer.bypassSecurityTrustHtml(svg));
+            });
         });
     }
 
