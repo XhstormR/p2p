@@ -62,7 +62,7 @@ export class HomeComponent {
         });
 
         effect(() => {
-            let url = `https://xhstormr.github.io/p2p?remoteId=${peerService.localId()}`;
+            let url = `${document.location.origin + document.location.pathname}?remoteId=${peerService.localId()}`;
             let opt: QRCodeToStringOptions = {
                 type: "svg",
             };
