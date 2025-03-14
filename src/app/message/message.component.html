@@ -14,32 +14,20 @@
         </mat-card-header>
         <mat-card-content>
             @switch (message.type) {
+                @case ("Text") {
+                    <span class="content">{{ message.text }}</span>
+                }
                 @case ("File") {
-                    <pre>{{ message.fileName }}({{ message.fileSize | fileSize }})</pre>
+                    <span class="content">{{ message.fileName }}({{ message.fileSize | fileSize }})</span>
                     @if (isImage) {
                         <img [src]="imageUrl" alt="image" style="max-width: 100%" />
                     }
-                }
-                @case ("Text") {
-                    <pre>{{ message.text }}</pre>
                 }
             }
             <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-actions>
             @switch (message.type) {
-                @case ("File") {
-                    <button
-                        (click)="onSave(message)"
-                        appThrottleButton
-                        mat-icon-button
-                        color="accent"
-                        matTooltip="Save"
-                        type="button"
-                    >
-                        <mat-icon svgIcon="download"></mat-icon>
-                    </button>
-                }
                 @case ("Text") {
                     <button
                         (click)="onCopy(message)"
@@ -50,6 +38,18 @@
                         type="button"
                     >
                         <mat-icon svgIcon="content_copy"></mat-icon>
+                    </button>
+                }
+                @case ("File") {
+                    <button
+                        (click)="onSave(message)"
+                        appThrottleButton
+                        mat-icon-button
+                        color="accent"
+                        matTooltip="Save"
+                        type="button"
+                    >
+                        <mat-icon svgIcon="download"></mat-icon>
                     </button>
                 }
             }

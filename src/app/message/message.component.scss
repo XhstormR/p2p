@@ -34,7 +34,9 @@
     color: rgba(white, 0.5);
 }
 
-.message-card pre {
+.message-card .content {
+    display: block;
+    margin: 1em 0;
     white-space: pre-wrap;
     word-break: break-word;
 }

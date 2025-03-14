@@ -1,4 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+$typography-config: mat.m2-define-typography-config($font-family: '"Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif');
+@include mat.typography-hierarchy($typography-config);
+
+$app-theme: mat.m2-define-dark-theme((
+    typography: $typography-config
+));
+@include mat.all-component-themes($app-theme);
 
 html,
 body {
