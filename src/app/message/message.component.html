@@ -18,7 +18,7 @@
                     <span class="content">{{ message.text }}</span>
                 }
                 @case ("File") {
-                    <span class="content">{{ message.fileName }}({{ message.fileSize | fileSize }})</span>
+                    <span class="content">{{ message.fileName }} ({{ message.fileSize | fileSize }})</span>
                     @if (isImage) {
                         <img [src]="imageUrl" alt="image" style="max-width: 100%" />
                     }
