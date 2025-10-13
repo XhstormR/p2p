@@ -16,7 +16,7 @@
         "module": "preserve",
         "useDefineForClassFields": false,
         "allowUnusedLabels": false,
-        "noUnusedParameters": false,
+        "noUnusedParameters": true,
         "noUnusedLocals": true
     },
     "angularCompilerOptions": {
