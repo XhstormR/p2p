@@ -3,7 +3,7 @@
         <div>
             <mat-icon
                 svgIcon="error"
-                color="warn"
+                class="warn"
                 matTooltip="Message sending failed!"
             ></mat-icon>
         </div>
@@ -33,7 +33,7 @@
                         (click)="onCopy(message)"
                         appThrottleButton
                         mat-icon-button
-                        color="accent"
+                        class="accent"
                         matTooltip="Copy to clipboard"
                         type="button"
                     >
@@ -45,7 +45,7 @@
                         (click)="onSave(message)"
                         appThrottleButton
                         mat-icon-button
-                        color="accent"
+                        class="accent"
                         matTooltip="Save"
                         type="button"
                     >
@@ -59,7 +59,7 @@
         </mat-card-actions>
         <mat-card-footer>
             @if (message.status === "Queued") {
-                <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+                <mat-progress-bar class="accent" mode="indeterminate"></mat-progress-bar>
             }
         </mat-card-footer>
     </mat-card>

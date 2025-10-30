@@ -5,25 +5,25 @@
                 <mat-label>Local Peer</mat-label>
                 <input [value]="peerService.localId()" matInput readonly type="text" />
                 @if (peerService.isOnline()) {
-                    <mat-icon matSuffix svgIcon="done" color="accent"
+                    <mat-icon matSuffix svgIcon="done" class="accent"
                               matTooltip="Online"></mat-icon>
                 } @else {
-                    <mat-icon matSuffix svgIcon="error" color="warn"
+                    <mat-icon matSuffix svgIcon="error" class="warn"
                               matTooltip="Offline"></mat-icon>
                 }
             </mat-form-field>
 
-            <button (click)="onRenew()" [disabled]="isReloading()" color="primary" mat-fab
+            <button (click)="onRenew()" [disabled]="isReloading()" mat-fab
                     matTooltip="Renew">
                 @if (isReloading()) {
-                    <mat-spinner color="accent" diameter="30"></mat-spinner>
+                    <mat-spinner class="accent" diameter="30"></mat-spinner>
                 } @else {
                     <mat-icon svgIcon="autorenew"></mat-icon>
                 }
             </button>
         </section>
 
-        <mat-divider [vertical]="!layoutService.isXSmall()"></mat-divider>
+        <mat-divider [vertical]="!layoutService.isXSmall()" class="primary"></mat-divider>
 
         <form (ngSubmit)="onSubmit()" [formGroup]="remoteIdForm" class="right-side">
             <mat-form-field hintLabel="Remote ID" appearance="outline"
@@ -65,13 +65,12 @@
 
             <button
                 [disabled]="isConnecting() || !peerService.isOnline() || !remoteIdForm.valid"
-                color="primary"
                 mat-fab
                 matTooltip="Connect"
                 type="submit"
             >
                 @if (isConnecting()) {
-                    <mat-spinner color="accent" diameter="30"></mat-spinner>
+                    <mat-spinner class="accent" diameter="30"></mat-spinner>
                 } @else {
                     <mat-icon svgIcon="link"></mat-icon>
                 }

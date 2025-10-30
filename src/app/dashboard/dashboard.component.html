@@ -61,7 +61,7 @@
                 <button
                     #fileTip="matTooltip"
                     (click)="fileUpload.click()"
-                    [color]="selectedFile() === undefined ? '' : 'primary'"
+                    [class]="selectedFile() === undefined ? '' : 'primary'"
                     [matTooltip]="selectedFile()?.name || 'Select a file'"
                     mat-icon-button
                     matSuffix
@@ -73,8 +73,7 @@
             <button
                 (click)="onSend($event)"
                 [disabled]="isSendDisabled()"
-                color="primary"
-                mat-raised-button
+                matButton="filled"
                 type="button"
             >
                 Send

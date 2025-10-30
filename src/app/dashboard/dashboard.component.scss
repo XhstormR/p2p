@@ -2,12 +2,11 @@ $bg-white: rgba(white, 0.1);
 
 :host {
     display: contents;
-    --mat-divider-color: lightblue;
 
     // make fileUpload icon stay at bottom
     ::ng-deep .chat-box .mat-mdc-form-field-icon-suffix {
         align-self: end;
-        padding-bottom: 4px;
+        padding-bottom: 8px;
     }
 }
 
