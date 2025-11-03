@@ -16,7 +16,10 @@ export class NotificationService {
 
     public open(message: string, duration: number = 10_000) {
         this.ngZone.run(() => this.snackBar.open(message, "OK", { duration: duration }));
-        this.alert.play();
+        this.alert
+            .play()
+            .then(() => (this.alert.muted = false))
+            .catch(() => (this.alert.muted = true)); // fix play() can only be initiated by a user gesture error
     }
 
     public error(message: string, duration: number = 10_000) {
