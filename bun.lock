@@ -20,7 +20,7 @@
       "devDependencies": {
         "@angular/build": "^21.0.1",
         "@angular/cli": "^21.0.1",
-        "@angular/compiler-cli": "^21.0.2",
+        "@angular/compiler-cli": "^21.0.3",
         "@biomejs/biome": "^2.3.8",
         "@types/jasmine": "~5.1.13",
         "@types/qrcode": "^1.5.6",
@@ -81,7 +81,7 @@
 
     "@angular/compiler": ["@angular/compiler@21.0.2", "", { "dependencies": { "tslib": "^2.3.0" } }, "sha512-Rs69yqT1M+l0DqAAZcGDt2TntKAPyldEViq3GQHbkM1W4f/hoRgBRsE6StxvP6wszW6VVHH3uQQdyeZV8Z4rpw=="],
 
-    "@angular/compiler-cli": ["@angular/compiler-cli@21.0.2", "", { "dependencies": { "@babel/core": "7.28.4", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^4.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "21.0.2", "typescript": ">=5.9 <6.0" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-+6lyvDV0rY1qbc9+rzFCBZDGCfJU0ah3p+4Tu0YYgKRbpbwvqj/O4cG1mLknEuQ2G61Y/tTKnTa4ng1XNtqVyw=="],
+    "@angular/compiler-cli": ["@angular/compiler-cli@21.0.3", "", { "dependencies": { "@babel/core": "7.28.4", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^4.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "21.0.3", "typescript": ">=5.9 <6.0" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-zb8Wl8Knsdp0nDvIljR9Y0T79OgzaJm45MvtTBTl7T9lw9kpJvVf09RfTLNtk7VS8ieDPZgDb2c6gpQRODIjjw=="],
 
     "@angular/core": ["@angular/core@21.0.2", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "21.0.2", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-jj2lYmwMKYY7tmZ7ml8rXJRKwkVMJamFIf6VQuIlSFK79Pmn6AeUhZwDlrAmK7sY9kakEKUmslSg0XLL3bfiyw=="],
 
