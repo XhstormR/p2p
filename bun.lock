@@ -8,7 +8,7 @@
         "@angular/cdk": "~21.0.3",
         "@angular/common": "^21.0.4",
         "@angular/compiler": "^21.0.4",
-        "@angular/core": "^21.0.3",
+        "@angular/core": "^21.0.4",
         "@angular/forms": "^21.0.4",
         "@angular/material": "~21.0.3",
         "@angular/platform-browser": "^21.0.4",
@@ -84,7 +84,7 @@
 
     "@angular/compiler-cli": ["@angular/compiler-cli@21.0.4", "", { "dependencies": { "@babel/core": "7.28.4", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^4.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "21.0.4", "typescript": ">=5.9 <6.0" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-CZeTia783iQ2Pp8ulWa2itTKC4YW7gBM0H4MDc4wbKlN2NSNzzUlttL5sQ4lKKq8DUZk3Cmj3DfJbwsECtQe5Q=="],
 
-    "@angular/core": ["@angular/core@21.0.3", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "21.0.3", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-/7a2FyZp5cyjNiwuNLr889KA8DVKSTcTtZJpz57Z9DpmZhPscDOWQqLn9f8jeEwbWllvgrXJi8pKSa78r8JAwA=="],
+    "@angular/core": ["@angular/core@21.0.4", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "21.0.4", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-VGFTvPdG5eowHi+BSYHRIvaFJuxhMejgulNKVz+ewDcq/U0KkNtEYFL2w0sNz4jBMrC4YsdRU/PwIpL/ATHryg=="],
 
     "@angular/forms": ["@angular/forms@21.0.4", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/common": "21.0.4", "@angular/core": "21.0.4", "@angular/platform-browser": "21.0.4", "@standard-schema/spec": "^1.0.0", "rxjs": "^6.5.3 || ^7.4.0" } }, "sha512-xWU5TN1TINX0gdIApEG5YVdHQwBzVwRSNr3Wqx/nOkOvmUZlFCcgnpvO5hj50wlp2ASvZX3EsRNJQr6kV0F8bw=="],
 
