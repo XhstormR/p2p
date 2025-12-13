@@ -3,31 +3,22 @@
         <section class="left-side">
             <mat-form-field appearance="outline" style="width: calc(180px + 16px * 2)">
                 <mat-label>Local Peer</mat-label>
-                <input [value]="peerService.localId()" matInput readonly type="text" />
+                <input [value]="peerService.localId()" matInput readonly type="text">
                 @if (peerService.isOnline()) {
-                    <mat-icon matSuffix svgIcon="done" class="accent"
-                              matTooltip="Online"></mat-icon>
-                } @else {
-                    <mat-icon matSuffix svgIcon="error" class="warn"
-                              matTooltip="Offline"></mat-icon>
-                }
+                <mat-icon matSuffix svgIcon="done" class="accent" matTooltip="Online"></mat-icon>} @else {
+                <mat-icon matSuffix svgIcon="error" class="warn" matTooltip="Offline"></mat-icon>}
             </mat-form-field>
 
-            <button (click)="onRenew()" [disabled]="isReloading()" mat-fab
-                    matTooltip="Renew">
-                @if (isReloading()) {
-                    <mat-spinner class="accent" diameter="30"></mat-spinner>
-                } @else {
-                    <mat-icon svgIcon="autorenew"></mat-icon>
-                }
+            <button (click)="onRenew()" [disabled]="isReloading()" mat-fab matTooltip="Renew">
+                @if (isReloading()) {<mat-spinner class="accent" diameter="30"></mat-spinner>} @else {
+                <mat-icon svgIcon="autorenew"></mat-icon>}
             </button>
         </section>
 
         <mat-divider [vertical]="!layoutService.isXSmall()" class="primary"></mat-divider>
 
         <form (ngSubmit)="onSubmit()" [formGroup]="remoteIdForm" class="right-side">
-            <mat-form-field hintLabel="Remote ID" appearance="outline"
-                            style="width: calc(180px + 16px * 2)">
+            <mat-form-field hintLabel="Remote ID" appearance="outline" style="width: calc(180px + 16px * 2)">
                 <mat-label>Remote Peer</mat-label>
                 <input
                     #remoteId
@@ -41,26 +32,26 @@
                     inputmode="numeric"
                     pattern="\d{6}"
                     placeholder="Ex. 123456"
-                />
+                >
                 @if (remoteId.value) {
-                    <button
-                        mat-icon-button
-                        matSuffix
-                        matTooltip="Clear"
-                        type="button"
-                        (click)="remoteIdForm.controls.remoteId.setValue('')"
-                    >
-                        <mat-icon svgIcon="backspace"></mat-icon>
-                    </button>
-                }
-                @if (remoteIdForm.controls.remoteId.hasError("remoteId")) {
-                    <mat-error>Remote ID can't be the same as local ID</mat-error>
-                } @else if (remoteIdForm.controls.remoteId.hasError("pattern")) {
-                    <mat-error>Please enter a valid remote ID</mat-error>
-                } @else if (remoteIdForm.controls.remoteId.hasError("required")) {
-                    <mat-error>Remote ID is <strong>required</strong></mat-error>
-                }
-                <mat-hint align="end">{{ remoteId.value.length }} / 6</mat-hint>
+                <button
+                    mat-icon-button
+                    matSuffix
+                    matTooltip="Clear"
+                    type="button"
+                    (click)="remoteIdForm.controls.remoteId.setValue('')"
+                >
+                    <mat-icon svgIcon="backspace"></mat-icon>
+                </button>
+                } @if (remoteIdForm.controls.remoteId.hasError("remoteId")) {
+                <mat-error>Remote ID can't be the same as local ID</mat-error>} @else if
+                (remoteIdForm.controls.remoteId.hasError("pattern")) {
+                <mat-error>Please enter a valid remote ID</mat-error>} @else if
+                (remoteIdForm.controls.remoteId.hasError("required")) {
+                <mat-error>
+                    Remote ID is <strong>required</strong>
+                </mat-error>
+                }<mat-hint align="end">{{ remoteId.value.length }}/ 6</mat-hint>
             </mat-form-field>
 
             <button
@@ -69,16 +60,10 @@
                 matTooltip="Connect"
                 type="submit"
             >
-                @if (isConnecting()) {
-                    <mat-spinner class="accent" diameter="30"></mat-spinner>
-                } @else {
-                    <mat-icon svgIcon="link"></mat-icon>
-                }
+                @if (isConnecting()) {<mat-spinner class="accent" diameter="30"></mat-spinner>} @else {
+                <mat-icon svgIcon="link"></mat-icon>}
             </button>
         </form>
     </div>
-
-    @if (!isMobile) {
-        <div class="qrcode" [innerHtml]="qrcode()"></div>
-    }
+    @if (!isMobile) {<div class="qrcode" [innerHtml]="qrcode()"></div>}
 </div>
