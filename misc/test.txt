@@ -16,6 +16,7 @@ bun upgrade
 bun install
 bun ng update --allow-dirty @angular/cli @angular/core @angular/material
 bun biome format --write ./src
+bun biome check --write --unsafe ./src
 
 https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API
 https://webrtc.github.io/samples/
