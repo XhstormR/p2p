@@ -23,7 +23,7 @@
         "@angular/cli": "^21.1.1",
         "@angular/compiler-cli": "^21.1.1",
         "@biomejs/biome": "^2.3.11",
-        "@types/jasmine": "~5.1.15",
+        "@types/jasmine": "~6.0.0",
         "@types/qrcode": "^1.5.6",
         "jasmine-core": "~6.0.1",
         "karma": "~6.4.4",
@@ -496,7 +496,7 @@
 
     "@types/estree": ["@types/estree@1.0.8", "", {}, "sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w=="],
 
-    "@types/jasmine": ["@types/jasmine@5.1.15", "", {}, "sha512-ZAC8KjmV2MJxbNTrwXFN+HKeajpXQZp6KpPiR6Aa4XvaEnjP6qh23lL/Rqb7AYzlp3h/rcwDrQ7Gg7q28cQTQg=="],
+    "@types/jasmine": ["@types/jasmine@6.0.0", "", {}, "sha512-18lgGsLmEh3VJk9eZ5wAjTISxdqzl6YOwu8UdMpolajN57QOCNbl+AbHUd+Yu9ItrsFdB+c8LSZSGNg8nHaguw=="],
 
     "@types/node": ["@types/node@20.11.17", "", { "dependencies": { "undici-types": "~5.26.4" } }, "sha512-QmgQZGWu1Yw9TDyAP9ZzpFJKynYNeOvwMJmaxABfieQoVoiVOS6MN1WSpqpRcbeA5+RW82kraAVxCCJg+780Qw=="],
 
