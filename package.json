@@ -25,7 +25,7 @@
     },
     "devDependencies": {
         "@angular/build": "^21.1.2",
-        "@angular/cli": "^21.1.1",
+        "@angular/cli": "^21.1.2",
         "@angular/compiler-cli": "^21.1.2",
         "@biomejs/biome": "^2.3.13",
         "@types/jasmine": "~6.0.0",
