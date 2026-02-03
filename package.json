@@ -27,7 +27,7 @@
         "@angular/build": "^21.1.2",
         "@angular/cli": "^21.1.2",
         "@angular/compiler-cli": "^21.1.2",
-        "@biomejs/biome": "^2.3.13",
+        "@biomejs/biome": "^2.3.14",
         "@types/jasmine": "~6.0.0",
         "@types/qrcode": "^1.5.6",
         "jasmine-core": "~6.0.1",
