@@ -48,6 +48,15 @@ export function blobToDataUrl(blob: Blob) {
     });
 }
 
+export function isValidUrl(str: string): boolean {
+    try {
+        const url = new URL(str);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
 export async function dataUrlToBlob(dataUrl: string) {
     let response = await fetch(dataUrl);
     return await response.blob();

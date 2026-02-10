@@ -9,10 +9,22 @@
             <mat-card-subtitle>{{ message.sender }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            @switch (message.type) { @case ("Text") {<span class="content">{{ message.text }}</span>} @case
-            ("File") {<span class="content">{{ message.fileName }}({{ message.fileSize | fileSize }})</span>
-            @if (isImage) {
-            <img [src]="imageUrl" alt="image" style="max-width: 100%">} } }<mat-divider></mat-divider>
+            @switch (message.type) {
+                @case ("Text") {
+                    @if (isUrl) {
+                        <p><a [href]="url" rel="noopener noreferrer" target="_blank">{{ url }}</a></p>
+                    } @else {
+                        <span class="content">{{ message.text }}</span>
+                    }
+                }
+                @case ("File") {
+                    <span class="content">{{ message.fileName }}({{ message.fileSize | fileSize }})</span>
+                    @if (isImage) {
+                        <img [src]="imageUrl" alt="image" style="max-width: 100%" />
+                    }
+                }
+            }
+            <mat-divider></mat-divider>
         </mat-card-content>
         <mat-card-actions>
             @switch (message.type) { @case ("Text") {

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {Component, Input, OnDestroy, OnInit, SecurityContext} from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { FileSizePipe } from "../file-size.pipe";
 import { MatCardModule } from "@angular/material/card";
@@ -12,7 +12,8 @@ import { NotificationService } from "../service/notification.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { PeerService } from "../service/peer.service";
 import { FileMessage, Message, TextMessage } from "../message.model";
-import { download, error } from "../utils";
+import {download, error, isValidUrl} from "../utils";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: "app-message",
@@ -34,6 +35,9 @@ export class MessageComponent implements OnInit, OnDestroy {
     @Input()
     message!: Message;
 
+    isUrl = false;
+    url: string | undefined;
+
     isImage = false;
     imageUrl: string | undefined;
     readonly imagePattern = /^image\/.+$/;
@@ -41,6 +45,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     constructor(
         private notificationService: NotificationService,
         private clipboard: Clipboard,
+        private sanitizer: DomSanitizer,
         public peerService: PeerService,
     ) {}
 
@@ -63,6 +68,10 @@ export class MessageComponent implements OnInit, OnDestroy {
             let blob = new Blob([this.message.file], { type: this.message.fileType });
             this.isImage = true;
             this.imageUrl = URL.createObjectURL(blob);
+        }
+        if (this.message.type == "Text" && isValidUrl(this.message.text)) {
+            this.isUrl = true;
+            this.url = this.sanitizer.sanitize(SecurityContext.URL, this.message.text) || '';
         }
     }
 
