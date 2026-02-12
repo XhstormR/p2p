@@ -14,24 +14,25 @@
     >
         <mat-selection-list [(ngModel)]="selectedPeer" (selectionChange)="drawer.toggle()" multiple="false">
             @for (peer of peers(); track peer) {
-            <mat-list-option [value]="peer" [selected]="$first">{{ peer }}</mat-list-option>} @empty {
-            <div class="empty-list">
-                <p>No peers online.</p>
-            </div>
+                <mat-list-option [value]="peer" [selected]="$first">{{ peer }}</mat-list-option>
+            } @empty {
+                <div class="empty-list">
+                    <p>No peers online.</p>
+                </div>
             }
         </mat-selection-list>
     </mat-sidenav>
     <mat-sidenav-content class="sidenav-content">
         @if (layoutService.isXSmall()) {
-        <mat-toolbar>
-            <button (click)="drawer.toggle()" mat-icon-button type="button">
+            <mat-toolbar>
+                <button (click)="drawer.toggle()" mat-icon-button type="button">
+                    <mat-icon svgIcon="menu"></mat-icon>
+                </button>
+            </mat-toolbar>
+        } @else {
+            <button (click)="drawer.toggle()" mat-icon-button type="button" class="absolute-menu">
                 <mat-icon svgIcon="menu"></mat-icon>
             </button>
-        </mat-toolbar>
-        } @else {
-        <button (click)="drawer.toggle()" mat-icon-button type="button" class="absolute-menu">
-            <mat-icon svgIcon="menu"></mat-icon>
-        </button>
         }
 
         <app-message-list [selectedPeer]="selectedPeer()?.[0]"></app-message-list>
@@ -44,7 +45,7 @@
                 (change)="onFileChanged($event); fileTip.show()"
                 class="file-input"
                 type="file"
-            >
+            />
             <mat-form-field appearance="outline">
                 <mat-label>Message</mat-label>
                 <textarea

@@ -1,19 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-@use "./colors";
+@use "sass:map";
+@use "color-utilities";
 
 html {
-    @include mat.theme((
-        color: (
-            theme-type: dark,
-            primary: mat.$cyan-palette,
-            tertiary: mat.$orange-palette,
-        ),
-        typography: Roboto,
-        density: 0,
-    ));
+    @include mat.theme(
+        (
+            color: (
+                theme-type: dark,
+                primary: mat.$cyan-palette,
+                tertiary: mat.$orange-palette,
+            ),
+            typography: Roboto,
+            density: 0,
+        )
+    );
     @include mat.system-classes();
-    @include colors.color-utilities;
+    @include color-utilities.color-classes();
 }
 
 html,
@@ -31,6 +34,11 @@ body {
     background-size: cover;
 
     cursor: url(../public/assets/cursor.ico), auto;
+}
+
+a {
+    color: map.get(mat.$m2-green-palette, A200);
+    word-break: break-all;
 }
 
 * {

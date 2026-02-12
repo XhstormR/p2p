@@ -1,0 +1,94 @@
+@use "@angular/material" as mat;
+@use "sass:map";
+@use "sass:selector";
+
+// 颜色变体：每个变体包含 text（文本颜色）和 background（背景颜色）
+$color-variants: (
+    "primary": (
+        text: var(--mat-sys-on-primary),
+        background: var(--mat-sys-primary),
+    ),
+    "accent": (
+        text: map.get(mat.$spring-green-palette, 80),
+        background: var(--mat-sys-secondary-container),
+    ),
+    "warn": (
+        text: var(--mat-sys-on-error-container),
+        background: var(--mat-sys-error-container),
+    ),
+);
+
+//https://sass-lang.com/documentation/at-rules/at-root/
+@mixin unify-parent($child) {
+    @at-root #{selector.unify(&, $child)} {
+        @content;
+    }
+}
+
+@mixin color-classes {
+    @each $k, $v in $color-variants {
+        $text-color: map.get($v, text);
+        $background-color: map.get($v, background);
+
+        [color="#{$k}"],
+        .#{$k} {
+            @include unify-parent("mat-icon") {
+                @include mat.icon-overrides(
+                    (
+                        color: $text-color,
+                    )
+                );
+            }
+
+            @include unify-parent("mat-divider") {
+                @include mat.divider-overrides(
+                    (
+                        color: $text-color,
+                    )
+                );
+            }
+
+            @include unify-parent("mat-spinner") {
+                @include mat.progress-spinner-overrides(
+                    (
+                        active-indicator-color: $text-color,
+                    )
+                );
+            }
+
+            @include unify-parent("mat-snack-bar-container") {
+                @include mat.snack-bar-overrides(
+                    (
+                        button-color: $text-color,
+                        supporting-text-color: $text-color,
+                        container-color: $background-color,
+                    )
+                );
+            }
+
+            @include unify-parent("button") {
+                @include mat.icon-button-overrides(
+                    (
+                        icon-color: $text-color,
+                    )
+                );
+                @include mat.fab-overrides(
+                    (
+                        foreground-color: $text-color,
+                        container-color: $background-color,
+                    )
+                );
+                @include mat.button-overrides(
+                    (
+                        tonal-label-text-color: $text-color,
+                        filled-label-text-color: $text-color,
+                        protected-label-text-color: $text-color,
+                        tonal-container-color: $background-color,
+                        filled-container-color: $background-color,
+                        protected-container-color: $background-color,
+                    )
+                );
+            }
+        }
+    }
+}

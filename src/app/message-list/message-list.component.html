@@ -1,10 +1,11 @@
 <div class="scroller">
     <div class="message-list">
         @for (message of selectedPeerMessages(); track message.timestamp) {
-        <app-message [message]="message"></app-message>} @empty {
-        <div class="empty-list">
-            <p>Please select a peer.</p>
-        </div>
+            <app-message [message]="message"></app-message>
+        } @empty {
+            <div class="empty-list">
+                <p>Please select a peer.</p>
+            </div>
         }
     </div>
 </div>

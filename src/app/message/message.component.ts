@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, SecurityContext} from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, SecurityContext } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { FileSizePipe } from "../file-size.pipe";
 import { MatCardModule } from "@angular/material/card";
@@ -12,8 +12,8 @@ import { NotificationService } from "../service/notification.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { PeerService } from "../service/peer.service";
 import { FileMessage, Message, TextMessage } from "../message.model";
-import {download, error, isValidUrl} from "../utils";
-import {DomSanitizer} from "@angular/platform-browser";
+import { download, error, isValidUrl } from "../utils";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
     selector: "app-message",
@@ -71,7 +71,7 @@ export class MessageComponent implements OnInit, OnDestroy {
         }
         if (this.message.type == "Text" && isValidUrl(this.message.text)) {
             this.isUrl = true;
-            this.url = this.sanitizer.sanitize(SecurityContext.URL, this.message.text) || '';
+            this.url = this.sanitizer.sanitize(SecurityContext.URL, this.message.text) || "";
         }
     }
 
