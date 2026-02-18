@@ -21,7 +21,7 @@
       "devDependencies": {
         "@angular/build": "^21.1.4",
         "@angular/cli": "^21.1.4",
-        "@angular/compiler-cli": "^21.1.4",
+        "@angular/compiler-cli": "^21.1.5",
         "@biomejs/biome": "^2.4.2",
         "@types/jasmine": "~6.0.0",
         "@types/qrcode": "^1.5.6",
@@ -82,7 +82,7 @@
 
     "@angular/compiler": ["@angular/compiler@21.1.4", "", { "dependencies": { "tslib": "^2.3.0" } }, "sha512-H0qtASeqOTaS44ioF4DYE/yNqwzUmEJpMYrcNEUFEwA20/DkLzyoaEx4y1CjIxtXxuhtge95PNymDBOLWSjIdg=="],
 
-    "@angular/compiler-cli": ["@angular/compiler-cli@21.1.4", "", { "dependencies": { "@babel/core": "7.28.5", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^5.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "21.1.4", "typescript": ">=5.9 <6.0" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-Uw8KmpVCo58/f5wf6pY8ZS5fodv65hn5jxms8Nv/K7/LVe3i1nNFrHyneBx5+a7qkz93nSV4rdwBVnMvjIyr+g=="],
+    "@angular/compiler-cli": ["@angular/compiler-cli@21.1.5", "", { "dependencies": { "@babel/core": "7.28.5", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^5.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "21.1.5", "typescript": ">=5.9 <6.0" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-i2r2bQuWdjjFGTd2TA7FtCWNx5yJ3BMoyTGUC9lzSfmxWAfcH/NWR+6OdaEVwv6Zap3IXYYxs8S+REkx954EwA=="],
 
     "@angular/core": ["@angular/core@21.1.4", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "21.1.4", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-QBDO5SaVYTVQ0fIN9Qd7US9cUCgs2vM9x6K18PTUKmygIkHVHTFdzwm4MO5gpCOFzJseGbS+dNzqn+v0PaKf9g=="],
 
