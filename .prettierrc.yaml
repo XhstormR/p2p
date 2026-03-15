@@ -1,7 +1,0 @@
-# https://prettier.io/docs/en/options
-
-printWidth: 110
-tabWidth: 4
-trailingComma: all
-quoteProps: preserve
-arrowParens: avoid

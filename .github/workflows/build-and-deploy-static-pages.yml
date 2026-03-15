@@ -1,31 +1,31 @@
 name: build-and-deploy-static-pages
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - uses: oven-sh/setup-bun@v2
-    - run: bun install
-    - run: bun run build
-    - uses: actions/configure-pages@v5
-    - uses: actions/upload-pages-artifact@v4
-      with:
-        path: ./dist/p2p/browser
-  deploy:
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/deploy-pages@v4
-      id: deployment
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: oven-sh/setup-bun@v2
+            - run: bun install
+            - run: bun run build
+            - uses: actions/configure-pages@v5
+            - uses: actions/upload-pages-artifact@v4
+              with:
+                  path: ./dist/p2p/browser
+    deploy:
+        needs: build
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/deploy-pages@v4
+              id: deployment
