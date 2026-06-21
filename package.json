@@ -37,6 +37,6 @@
         "karma-jasmine-html-reporter": "~2.2.0",
         "oxfmt": "^0.54.0",
         "typescript": "~6.0.3",
-        "vitest": "^4.1.8"
+        "vitest": "^4.1.9"
     }
 }
