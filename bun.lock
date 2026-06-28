@@ -8,7 +8,7 @@
         "@angular/cdk": "~22.0.2",
         "@angular/common": "^22.0.4",
         "@angular/compiler": "^22.0.4",
-        "@angular/core": "^22.0.2",
+        "@angular/core": "^22.0.4",
         "@angular/forms": "^22.0.4",
         "@angular/material": "~22.0.2",
         "@angular/platform-browser": "^22.0.4",
@@ -85,7 +85,7 @@
 
     "@angular/compiler-cli": ["@angular/compiler-cli@22.0.2", "", { "dependencies": { "@babel/core": "7.29.0", "@jridgewell/sourcemap-codec": "^1.4.14", "chokidar": "^5.0.0", "convert-source-map": "^1.5.1", "reflect-metadata": "^0.2.0", "semver": "^7.0.0", "tslib": "^2.3.0", "yargs": "^18.0.0" }, "peerDependencies": { "@angular/compiler": "22.0.2", "typescript": ">=6.0 <6.1" }, "optionalPeers": ["typescript"], "bin": { "ngc": "bundles/src/bin/ngc.js", "ng-xi18n": "bundles/src/bin/ng_xi18n.js" } }, "sha512-jBGGWdbrPQhIHWUz523CLQqEh/iYWxzZt7U9y0Ocdbas4/OlHcqaERO/K4ULkxclWX8MWYQoxal/MZbYOBfXgw=="],
 
-    "@angular/core": ["@angular/core@22.0.2", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "22.0.2", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-YMs6OZNeXh4tg67ePwSRN426WYvjqGdjxEwLrdOONKAruOmJAzW/Tqe328k/4SHfdbJTR87GPpRi5FzVP43DRA=="],
+    "@angular/core": ["@angular/core@22.0.4", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/compiler": "22.0.4", "rxjs": "^6.5.3 || ^7.4.0", "zone.js": "~0.15.0 || ~0.16.0" }, "optionalPeers": ["@angular/compiler", "zone.js"] }, "sha512-QTGwZcnc6dBhGPMID8DvwRQdHMvpqV0vXDX8jSdmVDiWDsFUjbe9AUFTHEizDm+wnmxOrCQ0DHkgmHICuh0GpA=="],
 
     "@angular/forms": ["@angular/forms@22.0.4", "", { "dependencies": { "@standard-schema/spec": "^1.0.0", "tslib": "^2.3.0", "zod": "^4.0.10" }, "peerDependencies": { "@angular/common": "22.0.4", "@angular/core": "22.0.4", "@angular/platform-browser": "22.0.4", "rxjs": "^6.5.3 || ^7.4.0" } }, "sha512-MId7Dcxl2/i/ztvf3sJggFBNOqR+btHfolEMRruqdD+o9b+eq/U3Yu0+4FQls1yJ84Lk75C5H6sN1Pc7kzNVgw=="],
 
